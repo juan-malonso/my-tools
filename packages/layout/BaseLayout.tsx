@@ -23,12 +23,8 @@ export function BaseLayout({
   lang = "en",
 }: BaseLayoutProps) {
   return (
-    <html lang={lang}>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased ${className}`}
-      >
-        {children}
-      </body>
+    <html lang={lang} className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`antialiased ${className}`}>{children}</body>
     </html>
   );
 }
