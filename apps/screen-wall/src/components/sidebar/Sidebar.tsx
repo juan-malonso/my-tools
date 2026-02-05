@@ -69,7 +69,7 @@ export function Sidebar({ asset, monitors }: SidebarProps) {
     const monitor = {
       orientation: "horizontal",
       aspectRatio: "16:9",
-      inches: 24,
+      inches: 27,
       position: { x: 0, y: 0, w: 0, h: 0 },
     };
 
