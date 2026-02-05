@@ -1,4 +1,3 @@
-export * from "./BaseLayout";
-export * from "./grids/ScreenLayout";
-export * from "./components/Header";
-export * from "./components/Sidebar";
+export * from "./Layout";
+export * from "./grids";
+export * from "./components";

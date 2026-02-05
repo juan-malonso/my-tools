@@ -2,23 +2,25 @@ import React from "react";
 
 export interface HeaderProps {
   title?: React.ReactNode;
-  children?: React.ReactNode;
-  className?: string;
+  topnav?: React.ReactNode;
+  actions?: React.ReactNode;
 }
 
-export function Header({ title, children, className = "" }: HeaderProps) {
+const style = "bg-gray-900 shadow-lg";
+const border = "border-gray-800";
+
+export function Header({
+  title = <></>,
+  topnav = <></>,
+  actions = <></>,
+}: HeaderProps) {
   return (
-    <header
-      className={`bg-gray-900 border-b border-gray-800 p-4 flex justify-between items-center shadow-md z-10 ${className}`}
+    <div
+      className={`w-full h-full ${style} border-b ${border} flex justify-between items-center shadow-lg z-10`}
     >
-      <div className="flex items-center gap-2">
-        {/* Por defecto mostramos el título si es string, o el nodo si es complejo */}
-        <div className="text-xl font-bold tracking-tight text-gray-100">
-          {title}
-        </div>
-      </div>
-      {/* Área para botones o acciones a la derecha */}
-      <div className="flex items-center gap-4">{children}</div>
-    </header>
+      {title}
+      {topnav}
+      {actions}
+    </div>
   );
 }

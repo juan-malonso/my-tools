@@ -2,15 +2,26 @@ import React from "react";
 
 export interface SidebarProps {
   children: React.ReactNode;
-  className?: string;
+  instructions?: React.ReactNode;
 }
 
-export function Sidebar({ children, className = "" }: SidebarProps) {
+const style = "bg-gray-900 shadow-lg";
+const border = "border-gray-800";
+
+const section = "p-6";
+
+export function Sidebar({ children, instructions }: SidebarProps) {
+  const leyend =
+    instructions !== undefined ? (
+      <div className={`${section} border-t ${border}`}>{instructions}</div>
+    ) : (
+      <></>
+    );
+
   return (
-    <aside
-      className={`w-80 bg-gray-900 border-r border-gray-800 flex flex-col z-10 shadow-lg ${className}`}
-    >
-      <div className="flex-grow p-6 space-y-8 overflow-y-auto">{children}</div>
-    </aside>
+    <div className={`w-full h-full ${style} border-r ${border} flex flex-col`}>
+      <div className={`${section} h-full overflow-y-auto`}>{children}</div>
+      {leyend}
+    </div>
   );
 }
