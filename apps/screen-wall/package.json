@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "build": "NEXT_PRIVATE_STANDALONE=true next build",
-    "deploy": "yarn build && yarn postbuild && wrangler deploy",
+    "deploy": "wrangler deploy",
+    "deploy:build": "yarn build && yarn postbuild && wrangler deploy",
     "dev": "next dev",
     "lint": "eslint .",
     "postbuild": "opennextjs-cloudflare build -s",
-    "start": "wrangler dev"
+    "start": "wrangler dev",
+    "start:build": "yarn build && yarn postbuild && wrangler dev"
   },
   "dependencies": {
     "@packages/components": "workspace:*",
