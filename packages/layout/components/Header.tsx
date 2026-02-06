@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export interface HeaderProps {
   title?: React.ReactNode;
@@ -6,17 +6,13 @@ export interface HeaderProps {
   actions?: React.ReactNode;
 }
 
-const style = "bg-gray-900 shadow-lg";
-const border = "border-gray-800";
+const style = 'bg-gray-900 shadow-lg';
+const border = 'border-gray-800';
 
-export function Header({
-  title = <></>,
-  topnav = <></>,
-  actions = <></>,
-}: HeaderProps) {
+export function Header({ title = <></>, topnav = <></>, actions = <></> }: HeaderProps) {
   return (
     <div
-      className={`w-full h-full ${style} border-b ${border} flex justify-between items-center shadow-lg z-10`}
+      className={`w-full h-full ${style} border-b ${border} flex justify-between items-center shadow-lg z-50`}
     >
       {title}
       {topnav}

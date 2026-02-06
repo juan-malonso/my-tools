@@ -4,14 +4,16 @@ import {
   Form,
   MonitorIcon,
   NumberInput,
-  SelectInput,
-} from "@packages/components";
+  SelectInput
+} from '@packages/components';
+
+import { type Monitor } from '@/models';
 
 export interface SidebarMonitorProps {
-  monitor: any;
+  monitor: Monitor;
   index: number;
   monitorCount: number;
-  changeMonitor: (e: any) => void;
+  changeMonitor: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   deleteMonitor: () => void;
 }
 
@@ -20,15 +22,13 @@ export function SidebarMonitor({
   index,
   monitorCount,
   changeMonitor,
-  deleteMonitor,
+  deleteMonitor
 }: SidebarMonitorProps) {
   return (
     <Card
-      title={`Monitor ${index + 1}`}
+      title={`Monitor ${(index + 1).toFixed(0)}`}
       icon={<MonitorIcon />}
-      actions={
-        monitorCount > 1 ? <DeleteButton onClick={deleteMonitor} /> : null
-      }
+      actions={monitorCount > 1 ? <DeleteButton onClick={deleteMonitor} /> : null}
     >
       <Form className="monitor-form">
         <SelectInput
@@ -59,14 +59,14 @@ export function SidebarMonitor({
 }
 
 const orientationOptions = [
-  { label: "Horizontal", value: "horizontal" },
-  { label: "Vertical", value: "vertical" },
+  { label: 'Horizontal', value: 'horizontal' },
+  { label: 'Vertical', value: 'vertical' }
 ];
 
 const aspectRatioOptions = [
-  { label: "16:9", value: "16:9" },
-  { label: "16:10", value: "16:10" },
-  { label: "21:9", value: "21:9" },
-  { label: "32:9", value: "32:9" },
-  { label: "4:3", value: "4:3" },
+  { label: '16:9', value: '16:9' },
+  { label: '16:10', value: '16:10' },
+  { label: '21:9', value: '21:9' },
+  { label: '32:9', value: '32:9' },
+  { label: '4:3', value: '4:3' }
 ];

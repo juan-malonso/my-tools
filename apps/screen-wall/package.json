@@ -6,7 +6,7 @@
     "build": "NEXT_PRIVATE_STANDALONE=true next build",
     "deploy": "yarn build && yarn postbuild && wrangler deploy",
     "dev": "next dev",
-    "lint": "next lint",
+    "lint": "eslint .",
     "postbuild": "opennextjs-cloudflare build -s",
     "start": "wrangler dev"
   },
@@ -23,6 +23,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@typescript-eslint/parser": "^8.54.0",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",

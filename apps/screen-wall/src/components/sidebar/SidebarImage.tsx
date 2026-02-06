@@ -1,25 +1,17 @@
-import {
-  Card,
-  DeleteButton,
-  Form,
-  ImageIcon,
-  NumberInput,
-} from "@packages/components";
+import { Card, DeleteButton, Form, ImageIcon, NumberInput } from '@packages/components';
+
+import { type Asset } from '@/models';
 
 export interface SidebarImageProps {
-  asset: { file: { name: string; type: string }; zoom: number };
+  asset: Asset;
   delAsset: () => void;
-  changeAsset: (e: any) => void;
+  changeAsset: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
 }
 
-export function SidebarImage({
-  asset,
-  delAsset,
-  changeAsset,
-}: SidebarImageProps) {
+export function SidebarImage({ asset, delAsset, changeAsset }: SidebarImageProps) {
   return (
     <Card
-      title={asset.file.name}
+      title={asset.file?.name ?? 'Unknown Image'}
       icon={<ImageIcon />}
       actions={<DeleteButton onClick={delAsset} />}
     >

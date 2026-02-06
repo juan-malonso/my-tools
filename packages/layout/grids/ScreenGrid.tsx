@@ -1,7 +1,8 @@
-import React from "react";
-import { Header } from "../components/Header";
-import { Sidebar } from "../components/Sidebar";
-import { Body } from "../components";
+import React from 'react';
+
+import { Body } from '../components';
+import { Header } from '../components/Header';
+import { Sidebar } from '../components/Sidebar';
 
 interface ScreenGridProps {
   headName: string;
@@ -19,9 +20,9 @@ interface ScreenGridProps {
   children: React.ReactNode;
 }
 
-const headerId = "header";
-const sidebarId = "sidebar";
-const mainId = "main";
+const headerId = 'header';
+const sidebarId = 'sidebar';
+const mainId = 'main';
 
 export function ScreenGrid({
   headName,
@@ -36,7 +37,7 @@ export function ScreenGrid({
   sidebarContent,
   sidebarInstructions,
 
-  children,
+  children
 }: ScreenGridProps) {
   return (
     <>
@@ -48,14 +49,10 @@ export function ScreenGrid({
         {headDeps}
       </head>
       <Grid>
-        <header className={`[grid-area:${headerId}] z-10`}>
-          <Header
-            title={headerTitle}
-            topnav={headerTopnav}
-            actions={headerActions}
-          ></Header>
+        <header className={`[grid-area:${headerId}] z-50`}>
+          <Header title={headerTitle} topnav={headerTopnav} actions={headerActions}></Header>
         </header>
-        <aside className={`[grid-area:${sidebarId}] z-10`}>
+        <aside className={`[grid-area:${sidebarId}] z-50`}>
           <Sidebar instructions={sidebarInstructions}>{sidebarContent}</Sidebar>
         </aside>
         <main className={`[grid-area:${mainId}]`}>
