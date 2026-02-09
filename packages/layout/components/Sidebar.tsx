@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react';
 
 export interface SidebarProps {
   children: React.ReactNode;
   instructions?: React.ReactNode;
 }
 
-const style = "bg-gray-900 shadow-lg";
-const border = "border-gray-800";
+const style = 'bg-gray-900 shadow-lg';
+const border = 'border-gray-800';
 
-const section = "p-6";
+const section = 'p-6';
 
 export function Sidebar({ children, instructions }: SidebarProps) {
   const leyend =

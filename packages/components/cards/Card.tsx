@@ -1,25 +1,30 @@
 export interface CardProps {
   icon?: React.ReactNode;
   title?: React.ReactNode;
-  level?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "none";
+  level?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'none';
+  className?: string;
+  background?: string;
   actions: React.ReactNode;
   children?: React.ReactNode;
 }
 
-const color = "bg-gray-800";
-const header = "border-b-2 border-gray-700";
+const header = 'border-b-2 border-gray-700';
 
 export function Card({
-  icon = "",
-  title = "",
-  level: Tag = "h3",
+  icon = '',
+  title = '',
+  level = 'h3',
+  className = '',
+  background = '',
   actions,
-  children = <></>,
+  children = <></>
 }: CardProps) {
+  const Tag = level === 'none' ? 'h3' : level;
+
   const $header =
-    Tag !== "none" ? (
-      <div className={`${header} flex justify-between p-3`}>
-        <Tag className="flex gap-2 text-sm tracking-wider">
+    level !== 'none' ? (
+      <div className={`${header} flex justify-between items-center p-3 ${className}`}>
+        <Tag className="flex gap-2 tracking-wider  items-center w-full">
           {icon} {title}
         </Tag>
         {actions}
@@ -29,9 +34,9 @@ export function Card({
     );
 
   return (
-    <div className={`${color} rounded-lg`}>
+    <div className={`bg-gray-800 rounded-lg ${background}`}>
       {$header}
-      <div className="space-y-3 p-3 ">{children}</div>
+      <div className="space-y-3 p-3">{children}</div>
     </div>
   );
 }

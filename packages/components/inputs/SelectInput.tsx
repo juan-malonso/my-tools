@@ -1,33 +1,31 @@
-import { Input } from "./Input";
+import React from 'react';
+
+import { Input } from './Input';
 
 export interface SelectInputProps {
   label: React.ReactNode;
   className?: string;
-  defaultValue: string;
+  defaultValue?: string;
   options: (string | { label: string; value: string })[];
-  onChange?: (e: any) => void;
+  onChange?: React.ChangeEventHandler<HTMLSelectElement, HTMLSelectElement>;
 }
 
-const style = "bg-gray-900 border border-gray-700 w-full rounded-md px-2 py-1";
+const style = 'bg-gray-900 border border-gray-700 w-full rounded-md px-2 py-1';
 
 export function SelectInput({
   label,
-  className = "",
+  className = '',
   options,
   defaultValue,
-  onChange,
+  onChange
 }: SelectInputProps) {
   return (
     <Input label={label}>
-      <select
-        className={`${style} ${className}`}
-        onChange={onChange}
-        defaultValue={defaultValue}
-      >
+      <select className={`${style} ${className}`} onChange={onChange} value={defaultValue}>
         {options.map((option, index) =>
-          typeof option === "string"
+          typeof option === 'string'
             ? SelectOption(index, option, option)
-            : SelectOption(index, option.value, option.label),
+            : SelectOption(index, option.value, option.label)
         )}
       </select>
     </Input>

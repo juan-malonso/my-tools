@@ -69,7 +69,7 @@ function Grid({ children }: { children: React.ReactNode }) {
       className={`
         h-full w-full overflow-hidden
         grid 
-        grid-rows-[50px_1fr]
+        grid-rows-[60px_1fr]
         grid-cols-[350px_1fr]
         [grid-template-areas:'${headerId}_${headerId}'_'${sidebarId}_${mainId}']
       `}

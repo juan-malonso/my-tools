@@ -1,12 +1,17 @@
-import React from "react";
+import React from 'react';
 
 export interface FormProps {
-  className: string;
+  className?: string;
   children?: React.ReactNode;
+  cols?: number;
 }
 
-const style = "grid grid-cols-2 gap-x-4 gap-y-2 text-sm items-center";
-
-export function Form({ className, children = <></> }: FormProps) {
-  return <div className={`${style} ${className}`}>{children}</div>;
+export function Form({ className = '', cols = 2, children = <></> }: FormProps) {
+  return (
+    <div
+      className={`grid grid-cols-${cols.toFixed(0)} gap-x-4 gap-y-2 text-sm items-center ${className}`}
+    >
+      {children}
+    </div>
+  );
 }

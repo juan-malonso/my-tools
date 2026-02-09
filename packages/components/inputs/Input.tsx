@@ -3,12 +3,12 @@ export interface InputProps {
   children?: React.ReactNode;
 }
 
-const style = "text-xs text-gray-400";
+const style = 'text-xs text-gray-400 my-auto';
 
 export function Input({ label, children = <></> }: InputProps) {
   return (
     <>
-      <label className={`${style}`}>{label}</label>
+      <label className={style}>{label}</label>
       {children}
     </>
   );

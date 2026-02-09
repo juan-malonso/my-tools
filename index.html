@@ -17,13 +17,13 @@
           extend: {
             colors: {
               gray: {
-                850: "#1f2937",
-                900: "#111827",
-                950: "#0b0f19",
-              },
-            },
-          },
-        },
+                850: '#1f2937',
+                900: '#111827',
+                950: '#0b0f19'
+              }
+            }
+          }
+        }
       };
     </script>
 
@@ -129,20 +129,13 @@
       }
     </style>
   </head>
-  <body
-    class="bg-gray-950 text-gray-100 h-screen flex flex-col overflow-hidden font-sans"
-  >
+  <body class="bg-gray-950 text-gray-100 h-screen flex flex-col overflow-hidden font-sans">
     <!-- Header -->
     <header
       class="bg-gray-900 border-b border-gray-800 p-4 flex justify-between items-center shadow-md z-10"
     >
       <div class="flex items-center gap-2">
-        <svg
-          class="w-6 h-6 text-blue-500"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -158,27 +151,16 @@
 
     <div class="flex flex-1 h-full overflow-hidden">
       <!-- Sidebar Controls -->
-      <aside
-        class="w-80 bg-gray-900 border-r border-gray-800 flex flex-col z-10 shadow-lg"
-      >
+      <aside class="w-80 bg-gray-900 border-r border-gray-800 flex flex-col z-10 shadow-lg">
         <div class="flex-grow p-6 space-y-8 overflow-y-auto">
           <!-- Upload Section -->
           <div id="upload-section" class="space-y-3">
-            <h2
-              class="text-sm uppercase text-gray-500 font-semibold tracking-wider"
-            >
-              1. Image
-            </h2>
+            <h2 class="text-sm uppercase text-gray-500 font-semibold tracking-wider">1. Image</h2>
             <div
               id="dropZone"
               class="border-2 border-dashed border-gray-700 rounded-xl p-6 text-center hover:border-blue-500 hover:bg-gray-800 transition-all cursor-pointer group"
             >
-              <input
-                type="file"
-                id="fileInput"
-                class="hidden"
-                accept="image/*"
-              />
+              <input type="file" id="fileInput" class="hidden" accept="image/*" />
               <div class="text-gray-400 group-hover:text-blue-400 mb-2">
                 <svg
                   class="w-10 h-10 mx-auto"
@@ -204,11 +186,7 @@
 
           <!-- Image Controls Section -->
           <div id="image-controls" class="space-y-3" style="display: none">
-            <h2
-              class="text-sm uppercase text-gray-500 font-semibold tracking-wider"
-            >
-              1. Image
-            </h2>
+            <h2 class="text-sm uppercase text-gray-500 font-semibold tracking-wider">1. Image</h2>
             <div class="bg-gray-800 rounded-lg p-3 space-y-3">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2 overflow-hidden">
@@ -223,9 +201,7 @@
                     ></path>
                     <path d="M10 14.586l-3-3-2 2V18h14v-5l-4-4z"></path>
                   </svg>
-                  <span
-                    id="image-name"
-                    class="text-sm text-gray-300 font-medium truncate"
+                  <span id="image-name" class="text-sm text-gray-300 font-medium truncate"
                     >image.jpg</span
                   >
                 </div>
@@ -243,9 +219,7 @@
                 </button>
               </div>
               <div class="space-y-2">
-                <label for="zoomRange" class="text-xs text-gray-400"
-                  >Zoom</label
-                >
+                <label for="zoomRange" class="text-xs text-gray-400">Zoom</label>
                 <div class="flex items-center gap-2">
                   <input
                     type="range"
@@ -270,9 +244,7 @@
           <!-- Add Monitor Section -->
           <div class="space-y-3">
             <div class="flex items-center justify-between">
-              <h2
-                class="text-sm uppercase text-gray-500 font-semibold tracking-wider"
-              >
+              <h2 class="text-sm uppercase text-gray-500 font-semibold tracking-wider">
                 2. Monitors
               </h2>
               <button
@@ -304,17 +276,12 @@
         id="preview-container"
         class="flex-1 relative bg-gray-950 flex items-center justify-center overflow-hidden"
       >
-        <div
-          id="image-background"
-          class="absolute inset-0 bg-no-repeat bg-center"
-        ></div>
+        <div id="image-background" class="absolute inset-0 bg-no-repeat bg-center"></div>
         <div
           id="emptyState"
           class="absolute inset-0 flex items-center justify-center pointer-events-none"
         >
-          <p class="text-gray-600 text-lg font-medium">
-            Upload an image to start
-          </p>
+          <p class="text-gray-600 text-lg font-medium">Upload an image to start</p>
         </div>
       </main>
     </div>
@@ -322,26 +289,26 @@
     <script>
       const state = {
         image: null,
-        imageName: "",
+        imageName: '',
         zoom: 1,
         panX: 0,
         panY: 0,
-        monitors: [],
+        monitors: []
       };
 
-      const previewContainer = document.getElementById("preview-container");
-      const imageBackground = document.getElementById("image-background");
-      const emptyState = document.getElementById("emptyState");
-      const dropZone = document.getElementById("dropZone");
-      const fileInput = document.getElementById("fileInput");
-      const addMonitorBtn = document.getElementById("addMonitorBtn");
-      const uploadSection = document.getElementById("upload-section");
-      const imageControls = document.getElementById("image-controls");
-      const imageName = document.getElementById("image-name");
-      const removeImageBtn = document.getElementById("remove-image-btn");
-      const zoomInput = document.getElementById("zoomInput");
-      const zoomRange = document.getElementById("zoomRange");
-      const monitorList = document.getElementById("monitor-list");
+      const previewContainer = document.getElementById('preview-container');
+      const imageBackground = document.getElementById('image-background');
+      const emptyState = document.getElementById('emptyState');
+      const dropZone = document.getElementById('dropZone');
+      const fileInput = document.getElementById('fileInput');
+      const addMonitorBtn = document.getElementById('addMonitorBtn');
+      const uploadSection = document.getElementById('upload-section');
+      const imageControls = document.getElementById('image-controls');
+      const imageName = document.getElementById('image-name');
+      const removeImageBtn = document.getElementById('remove-image-btn');
+      const zoomInput = document.getElementById('zoomInput');
+      const zoomRange = document.getElementById('zoomRange');
+      const monitorList = document.getElementById('monitor-list');
 
       function handleFileSelect(e) {
         if (e.target.files && e.target.files.length > 0) {
@@ -350,8 +317,7 @@
       }
 
       function handleFile(file) {
-        if (!file.type.startsWith("image/"))
-          return alert("Please upload a valid image file.");
+        if (!file.type.startsWith('image/')) return alert('Please upload a valid image file.');
 
         state.imageName = file.name;
 
@@ -363,10 +329,10 @@
             state.panX = 0;
             state.panY = 0;
 
-            uploadSection.style.display = "none";
-            imageControls.style.display = "block";
+            uploadSection.style.display = 'none';
+            imageControls.style.display = 'block';
             imageName.textContent = state.imageName;
-            emptyState.style.display = "none";
+            emptyState.style.display = 'none';
 
             imageBackground.style.backgroundImage = `url(${e.target.result})`;
             updateBackgroundTransform();
@@ -379,14 +345,14 @@
 
       function removeImage() {
         state.image = null;
-        state.imageName = "";
-        imageBackground.style.backgroundImage = "none";
+        state.imageName = '';
+        imageBackground.style.backgroundImage = 'none';
 
-        uploadSection.style.display = "block";
-        imageControls.style.display = "none";
-        emptyState.style.display = "flex";
+        uploadSection.style.display = 'block';
+        imageControls.style.display = 'none';
+        emptyState.style.display = 'flex';
 
-        fileInput.value = "";
+        fileInput.value = '';
       }
 
       function updateBackgroundTransform() {
@@ -427,9 +393,9 @@
           name,
           x: 0,
           y: 0,
-          orientation: config.orientation || "horizontal",
-          aspectRatio: config.aspectRatio || "16:9",
-          inches: config.inches || 24,
+          orientation: config.orientation || 'horizontal',
+          aspectRatio: config.aspectRatio || '16:9',
+          inches: config.inches || 24
         };
 
         calculateMonitorDimensions(monitor);
@@ -439,7 +405,7 @@
       }
 
       function calculateMonitorDimensions(monitor) {
-        const [ratioW, ratioH] = monitor.aspectRatio.split(":").map(Number);
+        const [ratioW, ratioH] = monitor.aspectRatio.split(':').map(Number);
         const inches = monitor.inches;
 
         const h_inches = inches / Math.sqrt(Math.pow(ratioW / ratioH, 2) + 1);
@@ -449,16 +415,14 @@
         const physical_w_px = w_inches * scalingFactor;
         const physical_h_px = h_inches * scalingFactor;
 
-        monitor.width =
-          monitor.orientation === "horizontal" ? physical_w_px : physical_h_px;
-        monitor.height =
-          monitor.orientation === "horizontal" ? physical_h_px : physical_w_px;
+        monitor.width = monitor.orientation === 'horizontal' ? physical_w_px : physical_h_px;
+        monitor.height = monitor.orientation === 'horizontal' ? physical_h_px : physical_w_px;
       }
 
       function createMonitorElement(monitor) {
-        const el = document.createElement("div");
+        const el = document.createElement('div');
         el.id = monitor.id;
-        el.className = "monitor";
+        el.className = 'monitor';
         el.style.width = `${monitor.width}px`;
         el.style.height = `${monitor.height}px`;
         el.style.transform = `translate(${monitor.x}px, ${monitor.y}px)`;
@@ -470,7 +434,7 @@
           </button>
         `;
 
-        el.querySelector(".download-btn").addEventListener("click", (e) => {
+        el.querySelector('.download-btn').addEventListener('click', (e) => {
           e.stopPropagation();
           downloadMonitor(monitor.id);
         });
@@ -502,9 +466,7 @@
       }
 
       function deleteMonitor(monitorId) {
-        const monitorIndex = state.monitors.findIndex(
-          (m) => m.id === monitorId,
-        );
+        const monitorIndex = state.monitors.findIndex((m) => m.id === monitorId);
         if (monitorIndex > -1) {
           state.monitors.splice(monitorIndex, 1);
           const el = document.getElementById(monitorId);
@@ -514,17 +476,15 @@
       }
 
       function renderMonitorList() {
-        monitorList.innerHTML = "";
+        monitorList.innerHTML = '';
         state.monitors.forEach((monitor) => {
-          const monitorItem = document.createElement("div");
-          monitorItem.className = "bg-gray-800 rounded-lg p-3 space-y-3";
+          const monitorItem = document.createElement('div');
+          monitorItem.className = 'bg-gray-800 rounded-lg p-3 space-y-3';
           monitorItem.innerHTML = `
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <svg class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="currentColor"><path d="M20 3H4c-1.103 0-2 .897-2 2v10c0 1.103.897 2 2 2h7v2H8v2h8v-2h-3v-2h7c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2zM4 15V5h16l.002 10H4z"></path></svg>
-                    <span class="text-sm text-gray-300 font-medium">${
-                      monitor.name
-                    }</span>
+                    <span class="text-sm text-gray-300 font-medium">${monitor.name}</span>
                 </div>
                 <button data-monitor-id="${
                   monitor.id
@@ -536,29 +496,29 @@
                 <label class="text-xs text-gray-400">Orientation</label>
                 <select class="orientation-select w-full bg-gray-900 border border-gray-700 rounded-md px-2 py-1">
                     <option value="horizontal" ${
-                      monitor.orientation === "horizontal" ? "selected" : ""
+                      monitor.orientation === 'horizontal' ? 'selected' : ''
                     }>Horizontal</option>
                     <option value="vertical" ${
-                      monitor.orientation === "vertical" ? "selected" : ""
+                      monitor.orientation === 'vertical' ? 'selected' : ''
                     }>Vertical</option>
                 </select>
                 
                 <label class="text-xs text-gray-400">Aspect Ratio</label>
                 <select class="aspect-ratio-select w-full bg-gray-900 border border-gray-700 rounded-md px-2 py-1">
                     <option value="16:9" ${
-                      monitor.aspectRatio === "16:9" ? "selected" : ""
+                      monitor.aspectRatio === '16:9' ? 'selected' : ''
                     }>16:9</option>
                     <option value="16:10" ${
-                      monitor.aspectRatio === "16:10" ? "selected" : ""
+                      monitor.aspectRatio === '16:10' ? 'selected' : ''
                     }>16:10</option>
                     <option value="21:9" ${
-                      monitor.aspectRatio === "21:9" ? "selected" : ""
+                      monitor.aspectRatio === '21:9' ? 'selected' : ''
                     }>21:9</option>
                     <option value="32:9" ${
-                      monitor.aspectRatio === "32:9" ? "selected" : ""
+                      monitor.aspectRatio === '32:9' ? 'selected' : ''
                     }>32:9</option>
                     <option value="4:3" ${
-                      monitor.aspectRatio === "4:3" ? "selected" : ""
+                      monitor.aspectRatio === '4:3' ? 'selected' : ''
                     }>4:3</option>
                 </select>
                 
@@ -571,26 +531,22 @@
           monitorList.appendChild(monitorItem);
 
           monitorItem
-            .querySelector(".delete-monitor-btn")
-            .addEventListener("click", (e) =>
-              deleteMonitor(e.currentTarget.dataset.monitorId),
-            );
+            .querySelector('.delete-monitor-btn')
+            .addEventListener('click', (e) => deleteMonitor(e.currentTarget.dataset.monitorId));
           monitorItem
-            .querySelector(".orientation-select")
-            .addEventListener("change", (e) =>
-              updateMonitor(monitor.id, { orientation: e.target.value }),
+            .querySelector('.orientation-select')
+            .addEventListener('change', (e) =>
+              updateMonitor(monitor.id, { orientation: e.target.value })
             );
+          monitorItem.querySelector('.inches-input').addEventListener('change', (e) =>
+            updateMonitor(monitor.id, {
+              inches: parseFloat(e.target.value) || 1
+            })
+          );
           monitorItem
-            .querySelector(".inches-input")
-            .addEventListener("change", (e) =>
-              updateMonitor(monitor.id, {
-                inches: parseFloat(e.target.value) || 1,
-              }),
-            );
-          monitorItem
-            .querySelector(".aspect-ratio-select")
-            .addEventListener("change", (e) =>
-              updateMonitor(monitor.id, { aspectRatio: e.target.value }),
+            .querySelector('.aspect-ratio-select')
+            .addEventListener('change', (e) =>
+              updateMonitor(monitor.id, { aspectRatio: e.target.value })
             );
         });
       }
@@ -615,19 +571,19 @@
 
         logCropCoordinates(monitor);
 
-        const tempCanvas = document.createElement("canvas");
+        const tempCanvas = document.createElement('canvas');
 
-        const [ratioW, ratioH] = monitor.aspectRatio.split(":").map(Number);
+        const [ratioW, ratioH] = monitor.aspectRatio.split(':').map(Number);
         const outputWidth = 3840;
         const outputHeight =
-          monitor.orientation === "horizontal"
+          monitor.orientation === 'horizontal'
             ? (outputWidth / ratioW) * ratioH
             : (outputWidth / ratioH) * ratioW;
 
         tempCanvas.width = outputWidth;
         tempCanvas.height = outputHeight;
 
-        const tCtx = tempCanvas.getContext("2d");
+        const tCtx = tempCanvas.getContext('2d');
 
         const rect = previewContainer.getBoundingClientRect();
         const centerX = rect.width / 2;
@@ -654,19 +610,15 @@
           0,
           0,
           outputWidth,
-          outputHeight,
+          outputHeight
         );
 
-        const blob = await new Promise((resolve) =>
-          tempCanvas.toBlob(resolve, "image/jpeg", 1.0),
-        );
-        const a = document.createElement("a");
+        const blob = await new Promise((resolve) => tempCanvas.toBlob(resolve, 'image/jpeg', 1.0));
+        const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        const lastDotIndex = state.imageName.lastIndexOf(".");
+        const lastDotIndex = state.imageName.lastIndexOf('.');
         const imageNameWithoutExtension =
-          lastDotIndex === -1
-            ? state.imageName
-            : state.imageName.substring(0, lastDotIndex);
+          lastDotIndex === -1 ? state.imageName : state.imageName.substring(0, lastDotIndex);
         a.download = `${imageNameWithoutExtension}_${monitor.name}.jpg`;
         a.click();
         URL.revokeObjectURL(a.href);
@@ -699,30 +651,28 @@
           source: {
             h: sourceHeight,
             w: sourceWidth,
-            f: zoomFactor,
+            f: zoomFactor
           },
           image: {
             h: imageHeight,
             w: imageWidth,
             x: imageX,
-            y: imageY,
+            y: imageY
           },
           crop: {
             h: monitorHeight / zoomFactor,
             w: monitorWidth / zoomFactor,
             x: monitorX / zoomFactor,
-            y: monitorY / zoomFactor,
-          },
+            y: monitorY / zoomFactor
+          }
         });
       }
 
       function initInteractions() {
-        interact(".monitor").draggable({
+        interact('.monitor').draggable({
           listeners: {
             move(event) {
-              const monitor = state.monitors.find(
-                (m) => m.id === event.target.id,
-              );
+              const monitor = state.monitors.find((m) => m.id === event.target.id);
               if (monitor) {
                 monitor.x += event.dx;
                 monitor.y += event.dy;
@@ -730,20 +680,18 @@
               }
             },
             end(event) {
-              const monitor = state.monitors.find(
-                (m) => m.id === event.target.id,
-              );
+              const monitor = state.monitors.find((m) => m.id === event.target.id);
               if (monitor) {
                 logCropCoordinates(monitor);
               }
-            },
+            }
           },
           modifiers: [
             interact.modifiers.snap({
-              targets: [interact.snappers.grid({ x: 10, y: 10 })],
-            }),
+              targets: [interact.snappers.grid({ x: 10, y: 10 })]
+            })
           ],
-          inertia: true,
+          inertia: true
         });
 
         interact(previewContainer).draggable({
@@ -759,11 +707,11 @@
               if (state.image) {
                 state.monitors.forEach(logCropCoordinates);
               }
-            },
-          },
+            }
+          }
         });
 
-        previewContainer.addEventListener("wheel", (event) => {
+        previewContainer.addEventListener('wheel', (event) => {
           if (state.image) {
             event.preventDefault();
 
@@ -784,41 +732,41 @@
       }
 
       // --- Init ---
-      dropZone.addEventListener("click", () => fileInput.click());
-      fileInput.addEventListener("change", handleFileSelect);
-      dropZone.addEventListener("dragover", (e) => {
+      dropZone.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', handleFileSelect);
+      dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
-        dropZone.classList.add("border-blue-500", "bg-gray-800");
+        dropZone.classList.add('border-blue-500', 'bg-gray-800');
       });
-      dropZone.addEventListener("dragleave", () => {
-        dropZone.classList.remove("border-blue-500", "bg-gray-800");
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('border-blue-500', 'bg-gray-800');
       });
-      dropZone.addEventListener("drop", (e) => {
+      dropZone.addEventListener('drop', (e) => {
         e.preventDefault();
-        dropZone.classList.remove("border-blue-500", "bg-gray-800");
+        dropZone.classList.remove('border-blue-500', 'bg-gray-800');
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
           handleFile(e.dataTransfer.files[0]);
         }
       });
 
-      removeImageBtn.addEventListener("click", removeImage);
+      removeImageBtn.addEventListener('click', removeImage);
 
-      zoomInput.addEventListener("change", (e) => {
+      zoomInput.addEventListener('change', (e) => {
         setZoom(parseFloat(e.target.value) / 100, true);
         zoomRange.value = e.target.value;
       });
 
-      zoomRange.addEventListener("input", (e) => {
+      zoomRange.addEventListener('input', (e) => {
         setZoom(parseFloat(e.target.value) / 100, true);
         zoomInput.value = e.target.value;
       });
 
-      addMonitorBtn.addEventListener("click", () => addMonitor());
+      addMonitorBtn.addEventListener('click', () => addMonitor());
 
-      window.addEventListener("load", () => {
+      window.addEventListener('load', () => {
         addMonitor();
         initInteractions();
-        window.addEventListener("resize", recenterMonitors);
+        window.addEventListener('resize', recenterMonitors);
       });
     </script>
   </body>

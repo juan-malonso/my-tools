@@ -1,12 +1,13 @@
-import { useRef, useState } from "react";
-import { UploadIcon } from "../icons";
+import React, { useRef, useState } from 'react';
+
+import { UploadIcon } from '../icons';
 
 export interface ImageInputProps {
-  onChange: (e: any) => void;
+  onChange: (e: File) => void;
 }
 
 const style =
-  "border-2 border-dashed border-gray-700 rounded-xl hover:border-blue-500 hover:bg-gray-800";
+  'border-2 border-dashed border-gray-700 rounded-xl hover:border-blue-500 hover:bg-gray-800';
 const onDragStyle = `${style} border-blue-500 bg-gray-800`;
 
 export function ImageInput({ onChange }: ImageInputProps) {
@@ -17,8 +18,19 @@ export function ImageInput({ onChange }: ImageInputProps) {
     inputFile.current?.click();
   };
 
-  const handleFile = (e: any) => {
-    const file = e.target.files?.[0] || e.dataTransfer?.files?.[0];
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLDivElement>) => {
+    let files: File[] | undefined;
+
+    switch (true) {
+      case 'target' in e && 'files' in e.target:
+        files = e.target.files as unknown as File[];
+        break;
+      case 'dataTransfer' in e && 'files' in e.dataTransfer:
+        files = e.dataTransfer.files as unknown as File[];
+        break;
+    }
+
+    const file = files?.[0];
 
     if (file) {
       onChange(file);

@@ -1,4 +1,6 @@
-import { Input } from "./Input";
+import React from 'react';
+
+import { Input } from './Input';
 
 export interface NumberInputProps {
   label: React.ReactNode;
@@ -8,20 +10,20 @@ export interface NumberInputProps {
   minValue?: number;
   maxValue?: number;
   step?: number;
-  onChange?: (e: any) => void;
+  onChange?: React.ChangeEventHandler<HTMLInputElement, HTMLInputElement>;
 }
 
-const style = "bg-gray-900 border border-gray-700 w-full rounded-md px-2 py-1";
+const style = 'bg-gray-900 border border-gray-700 w-full rounded-md px-2 py-1';
 
 export function NumberInput({
   label,
   placeholder,
-  className = "",
+  className = '',
   defaultValue,
   minValue,
   maxValue,
   step = 1,
-  onChange,
+  onChange
 }: NumberInputProps) {
   return (
     <Input label={label}>

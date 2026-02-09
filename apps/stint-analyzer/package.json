@@ -1,0 +1,39 @@
+{
+  "name": "stint-analyzer",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "NEXT_PRIVATE_STANDALONE=true next build",
+    "deploy": "wrangler deploy",
+    "deploy:build": "yarn build && yarn postbuild && wrangler deploy",
+    "dev": "next dev",
+    "lint": "eslint .",
+    "postbuild": "opennextjs-cloudflare build -s",
+    "start": "wrangler dev",
+    "start:build": "yarn build && yarn postbuild && wrangler dev"
+  },
+  "dependencies": {
+    "@packages/components": "workspace:*",
+    "@packages/layout": "workspace:*",
+    "next": "16.1.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "recharts": "^3.7.0"
+  },
+  "devDependencies": {
+    "@opennextjs/cloudflare": "^1.6.5",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/recharts": "^2.0.1",
+    "@typescript-eslint/parser": "^8.54.0",
+    "babel-plugin-react-compiler": "1.0.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "open-next": "^3.1.3",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "wrangler": "^4.32.0"
+  }
+}

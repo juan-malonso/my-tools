@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 
 interface LayoutProps {
   children: React.ReactNode;
   lang?: string;
 }
 
-export function Layout({ children, lang = "en" }: LayoutProps) {
+export function Layout({ children, lang = 'en' }: LayoutProps) {
   return (
     <html lang={lang} style={htmlStyle}>
       {children}
@@ -14,6 +14,6 @@ export function Layout({ children, lang = "en" }: LayoutProps) {
 }
 
 const htmlStyle: React.CSSProperties = {
-  height: "100%",
-  width: "100%",
+  height: '100%',
+  width: '100%'
 };
