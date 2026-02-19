@@ -1,3 +1,0 @@
-rule_settings:
-  disable:
-  - dont-self-assign-variables
