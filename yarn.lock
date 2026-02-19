@@ -9769,6 +9769,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"team-time@workspace:apps/team-time":
+  version: 0.0.0-use.local
+  resolution: "team-time@workspace:apps/team-time"
+  dependencies:
+    "@opennextjs/cloudflare": "npm:^1.6.5"
+    "@packages/components": "workspace:*"
+    "@packages/layout": "workspace:*"
+    "@tailwindcss/postcss": "npm:^4"
+    "@types/node": "npm:^20"
+    "@types/react": "npm:^19"
+    "@types/react-dom": "npm:^19"
+    "@typescript-eslint/parser": "npm:^8.54.0"
+    babel-plugin-react-compiler: "npm:1.0.0"
+    eslint: "npm:^9"
+    eslint-config-next: "npm:16.1.6"
+    next: "npm:16.1.6"
+    open-next: "npm:^3.1.3"
+    react: "npm:19.2.3"
+    react-dom: "npm:19.2.3"
+    tailwindcss: "npm:^4"
+    typescript: "npm:^5"
+    wrangler: "npm:^4.32.0"
+  languageName: unknown
+  linkType: soft
+
 "terser@npm:5.16.9":
   version: 5.16.9
   resolution: "terser@npm:5.16.9"

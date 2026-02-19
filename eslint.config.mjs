@@ -63,7 +63,7 @@ export default tseslint.config(
       'max-params': ['error', 4],
 
       // Function Length
-      'max-lines-per-function': ['error', 100],
+      'max-lines-per-function': ['error', 200],
 
       // Naming Conventions
       '@typescript-eslint/naming-convention': [

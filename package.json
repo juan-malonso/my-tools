@@ -3,6 +3,7 @@
   "workspaces": [
     "apps/screen-wall",
     "apps/stint-analyzer",
+    "apps/team-time",
     "packages/components",
     "packages/layout"
   ],
