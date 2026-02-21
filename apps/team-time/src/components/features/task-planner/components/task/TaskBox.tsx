@@ -76,18 +76,22 @@ export const TaskBox: React.FC<{
           }}
         />
         <TaskBoxModule module={mod} />
-        <div className="p-1 pl-4 flex flex-col">
-          <div className="flex items-center">
+        <div className="p-1 pl-3 flex flex-col gap-1">
+          <div className="flex gap-1 text-sm">
             <TaskBoxModuleSelector
               modules={modules}
               allocation={allocation}
               onUpdateAllocation={onUpdateAllocation}
             />
-            <div className="text-md text-left ml-2">{task.title}</div>
+            <div className="text-md">{task.title}</div>
           </div>
-          <div className="text-sm text-left text-gray-400">
-            <div>{task.description}</div>
-            <div>{mod?.name}</div>
+          <div className="text-sm text-slate-400">{task.description}</div>
+          <div className="flex gap-1 flex-wrap">
+            {task.ticket.map((t, i) => (
+              <TaskBoxBadget key={i} module={mod}>
+                {t.id}
+              </TaskBoxBadget>
+            ))}
           </div>
         </div>
         <TaskBoxActions module={mod} allocation={allocation} onDuplicate={onDuplicate} />
@@ -104,9 +108,50 @@ export const TaskBox: React.FC<{
   );
 };
 
+const TaskBoxBadget: React.FC<{ module?: Module; children: React.ReactNode }> = ({
+  module,
+  children
+}) => {
+  return (
+    <div
+      className={`px-1.5 py-0.5 rounded text-nowrap
+      bg-${module?.color ?? 'gray-400'} text-slate-100 text-xs
+    `}
+    >
+      {children}
+    </div>
+  );
+};
+
 const TaskBoxModule: React.FC<{ module?: Module }> = ({ module }) => {
   return (
-    <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${module?.color ?? 'bg-gray-400'}`} />
+    <div className={`absolute left-0 top-0 bottom-0 w-1.5 bg-${module?.color ?? 'gray-400'}`} />
+  );
+};
+
+const TaskBoxModuleSelector: React.FC<{
+  modules: Module[];
+  allocation: Allocation;
+  onUpdateAllocation: (allocation: Allocation) => void;
+}> = ({ modules, allocation, onUpdateAllocation }) => {
+  const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    onUpdateAllocation({ ...allocation, moduleId: e.target.value });
+  };
+
+  return (
+    <select
+      className={`bg-white text-slate-800 text-sm
+          border border-slate-500 rounded 
+          focus:outline-none focus:ring-0 focus:border-slate-300`}
+      value={allocation.moduleId}
+      onChange={onChange}
+    >
+      {[{ id: '---' }, ...modules].map((mod, i) => (
+        <option key={i} value={mod.id} className="text-black">
+          {mod.id}
+        </option>
+      ))}
+    </select>
   );
 };
 
@@ -116,12 +161,6 @@ const TaskBoxActions: React.FC<{
   onDuplicate: (allocation: Allocation) => void;
 }> = ({ module, allocation, onDuplicate }) => {
   const actions: { onClick: () => void; children: React.ReactNode }[] = [
-    {
-      onClick: () => {
-        onDuplicate(allocation);
-      },
-      children: <CloneIcon className="h-4 w-4 text-slate-100" />
-    },
     {
       onClick: () => {
         onDuplicate(allocation);
@@ -145,7 +184,7 @@ const TaskBoxActions: React.FC<{
               p-1.5 rounded-lg 
               shadow-sm hover:brightness-110
               bg-gray-400
-              hover:${module?.color ?? 'bg-gray-400'}
+              hover:bg-${module?.color ?? 'gray-400'}
             `}
           onClick={onClick}
         >
@@ -153,32 +192,6 @@ const TaskBoxActions: React.FC<{
         </button>
       ))}
     </div>
-  );
-};
-
-const TaskBoxModuleSelector: React.FC<{
-  modules: Module[];
-  allocation: Allocation;
-  onUpdateAllocation: (allocation: Allocation) => void;
-}> = ({ modules, allocation, onUpdateAllocation }) => {
-  const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    onUpdateAllocation({ ...allocation, moduleId: e.target.value });
-  };
-
-  return (
-    <select
-      className={`bg-white text-slate-800 text-sm
-          border border-slate-300 rounded-md
-          focus:outline-none focus:ring-0 focus:border-slate-300`}
-      value={allocation.moduleId}
-      onChange={onChange}
-    >
-      {[{ id: '---' }, ...modules].map((mod, i) => (
-        <option key={i} value={mod.id} className="text-black">
-          {mod.id}
-        </option>
-      ))}
-    </select>
   );
 };
 

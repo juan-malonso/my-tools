@@ -51,13 +51,27 @@ export default function Page() {
       { id: '0000000000002', name: 'Jane Doe', title: 'Designer' }
     ],
     modules: [
-      { id: 'MD1', name: 'Module 1', color: 'bg-red-500' },
-      { id: 'MD2', name: 'Module 2', color: 'bg-green-500' },
-      { id: 'MD3', name: 'Module 3', color: 'bg-orange-500' }
+      { id: 'MD1', name: 'Module 1', color: 'red-500' },
+      { id: 'MD2', name: 'Module 2', color: 'green-500' },
+      { id: 'MD3', name: 'Module 3', color: 'orange-500' }
     ],
     tasks: [
-      { id: '0000000000001', title: 'Task 1', description: 'Description 1', ticket: [] },
-      { id: '0000000000002', title: 'Task 2', description: 'Description 2', ticket: [] }
+      {
+        id: '0000000000001',
+        title: 'Task 1',
+        description: 'Description 1',
+        ticket: [
+          { id: 'IDV-2231', title: 'Ticket 1' },
+          { id: 'IDV-2233', title: 'Ticket 2' },
+          { id: 'IDV-2234', title: 'Ticket 3' }
+        ]
+      },
+      {
+        id: '0000000000002',
+        title: 'Task 2',
+        description: 'Description 2',
+        ticket: [{ id: 'IDV-2231', title: 'Ticket 1' }]
+      }
     ],
     allocations: [
       {
@@ -65,6 +79,22 @@ export default function Page() {
         iniDate: getDate(date, 'day', 1).toISOString().slice(0, 10),
         span: 3,
         memberId: '0000000000001',
+        taskId: '0000000000001',
+        moduleId: 'MD1'
+      },
+      {
+        id: '0000000000002',
+        iniDate: getDate(date, 'day', 2).toISOString().slice(0, 10),
+        span: 1,
+        memberId: '0000000000002',
+        taskId: '0000000000002',
+        moduleId: 'MD1'
+      },
+      {
+        id: '0000000000003',
+        iniDate: getDate(date, 'day', 0).toISOString().slice(0, 10),
+        span: 1,
+        memberId: '0000000000002',
         taskId: '0000000000001',
         moduleId: 'MD1'
       }
