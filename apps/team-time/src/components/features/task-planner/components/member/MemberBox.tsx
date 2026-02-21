@@ -2,7 +2,7 @@ import React from 'react';
 
 import type { Member } from '@/models';
 
-import { CELL_H, USER_W } from '../utils/handlers';
+import { CELL_H, USER_W } from '../../utils/handlers';
 
 export const MemberBox: React.FC<{ member: Member }> = ({ member }) => {
   return (

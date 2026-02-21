@@ -15,8 +15,8 @@ export interface Resize {
 export function useResize(
   dates: ItemDate[],
   allocations: Utils<Allocation>
-): [Resize | null, React.Dispatch<React.SetStateAction<Resize | null>>] {
-  const [resizing, setResizing] = useState<Resize | null>(null);
+): [Resize | undefined, React.Dispatch<React.SetStateAction<Resize | undefined>>] {
+  const [resizing, setResizing] = useState<Resize | undefined>(undefined);
 
   useEffect(() => {
     if (!resizing) return;
@@ -60,7 +60,7 @@ export function useResize(
     };
 
     const handleMouseUp = () => {
-      setResizing(null);
+      setResizing(undefined);
     };
 
     window.addEventListener('mousemove', handleMouseMove);

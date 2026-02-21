@@ -5,10 +5,10 @@ import type { Task } from './task.model';
 
 export interface Utils<T> {
   values: T[];
-  add: (member: T) => void;
-  set: (member: T) => void;
-  del: (member: T) => void;
-  raw: (members: T[]) => void;
+  add: (item: T) => void;
+  set: (item: T) => void;
+  del: (item: T) => void;
+  raw: (items: T[]) => void;
 }
 
 export interface External {

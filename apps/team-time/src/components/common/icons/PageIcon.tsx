@@ -1,8 +1,4 @@
-export interface BodyProps {
-  className?: string;
-}
-
-export function PageIcon({ className = 'w-6 h-6 text-sky-500' }: BodyProps) {
+export function PageIcon({ className = 'w-6 h-6 text-sky-500' }: { className?: string }) {
   return (
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path

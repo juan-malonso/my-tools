@@ -2,8 +2,8 @@ import React from 'react';
 
 import type { Config } from '@/models';
 
-import { BackgroundTable } from './components/BackgroundTable';
-import { TaskTable } from './components/TaskTable';
+import { BackgroundTable } from './components/table/BackgroundTable';
+import { TaskTable } from './components/table/TaskTable';
 import { MONTH_H, WEEK_H, DATE_H } from './utils/handlers';
 
 interface TaskPlannerProps {

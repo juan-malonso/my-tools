@@ -5,8 +5,8 @@ import { useMemo, useState } from 'react';
 import { BodyGrid } from '@packages/layout';
 import Script from 'next/script';
 
-import { TaskPlanner } from '@/components/features/task-planner';
 import { PageIcon } from '@/components/common/icons';
+import { TaskPlanner } from '@/components/features/task-planner';
 import {
   type Allocation,
   type Member,
@@ -51,9 +51,9 @@ export default function Page() {
       { id: '0000000000002', name: 'Jane Doe' }
     ],
     modules: [
-      { id: '0000000000001', name: 'Module 1', color: 'bg-red-500' },
-      { id: '0000000000002', name: 'Module 2', color: 'bg-green-500' },
-      { id: '0000000000003', name: 'Module 3', color: 'bg-orange-500' }
+      { id: 'MD1', name: 'Module 1', color: 'bg-red-500' },
+      { id: 'MD2', name: 'Module 2', color: 'bg-green-500' },
+      { id: 'MD3', name: 'Module 3', color: 'bg-orange-500' }
     ],
     tasks: [
       { id: '0000000000001', title: 'Task 1', description: 'Description 1', ticket: [] },
@@ -62,11 +62,11 @@ export default function Page() {
     allocations: [
       {
         id: '0000000000001',
-        iniDate: getDate(date, 'day', 4).toISOString().slice(0, 10),
+        iniDate: getDate(date, 'day', 1).toISOString().slice(0, 10),
         span: 3,
         memberId: '0000000000001',
         taskId: '0000000000001',
-        moduleId: '0000000000001'
+        moduleId: 'MD1'
       }
     ]
   });

@@ -14,7 +14,7 @@ import {
   type ItemMonth,
   type ItemWeek,
   USER_W
-} from '../utils/handlers';
+} from '../../utils/handlers';
 
 interface BackgroundTableProps {
   config: Config;

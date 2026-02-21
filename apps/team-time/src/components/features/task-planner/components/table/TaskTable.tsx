@@ -2,12 +2,12 @@ import React from 'react';
 
 import type { Allocation, Config, Member, Task } from '@/models';
 
-import { useDrag } from '../hooks/useDrag';
-import { useResize } from '../hooks/useResize';
-import { CreateMemberBox } from './CreateMemberBox';
-import { MemberBox } from './MemberBox';
-import { DateCell, type Over } from './DateCell';
-import { getDates, type ItemDate, CELL_H, DATE_H, CELL_W } from '../utils/handlers';
+import { type CellMetadata, DateCell, type Over } from './DateCell';
+import { useDrag } from '../../hooks/useDrag';
+import { useResize } from '../../hooks/useResize';
+import { getDates, type ItemDate, CELL_H, DATE_H, CELL_W } from '../../utils/handlers';
+import { CreateMemberBox } from '../member/CreateMemberBox';
+import { MemberBox } from '../member/MemberBox';
 
 interface TaskTableProps {
   config: Config;
@@ -20,18 +20,18 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
   const [resizing, setResizing] = useResize(dates, allocations);
   const [handleDrag, handleDrop, dragged] = useDrag(dates, allocations);
 
-  const [isOver, setIsOver] = React.useState<Over | null>(null);
+  const [over, setOver] = React.useState<Over | undefined>(undefined);
 
   const addTask = (memberId: string, date: ItemDate) => () => {
     const task: Task = {
-      id: Math.random().toString(16).slice(2, 10),
+      id: crypto.randomUUID().slice(0, 8),
       title: 'Nueva Tarea',
       description: 'Descripción por defecto',
       ticket: []
     };
 
     const allocation: Allocation = {
-      id: Math.random().toString(16).slice(2, 10),
+      id: crypto.randomUUID().slice(0, 8),
 
       iniDate: date.label,
       span: 1,
@@ -43,13 +43,11 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
 
     tasks.add(task);
     allocations.add(allocation);
-
-    console.log('addTask', memberId, date);
   };
 
   const addMember = () => {
     const member: Member = {
-      id: Math.random().toString(16).slice(2, 10),
+      id: crypto.randomUUID().slice(0, 8),
       name: 'New Member'
     };
     members.add(member);
@@ -71,35 +69,42 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
             >
               <MemberBox key={i} member={member} />
               {dates.map((date, j) => {
-                const allocation = memberTasks.find((a) => a.iniDate === date.label);
-                const allocationSpan = allocation?.span ?? 0;
+                const allocation = memberTasks.find(
+                  (a) => dragged?.id !== a.id && a.iniDate === date.label
+                );
 
-                // This logic determines if a cell should be empty because it is "spanned over"
-                // by a task from a previous day. `remainingSpan` is a countdown of days
-                // covered by a task. If a task has a span > 1, this will be > 0 for
-                // the next cells in the row.
-                remainingSpan = Math.max(remainingSpan, allocationSpan) - 1;
+                remainingSpan = Math.max(remainingSpan, allocation?.span ?? 0) - 1;
+
+                const next = findNextFreeCell(dates, allocations.values, j);
+
+                const cell: CellMetadata = {
+                  member,
+                  date,
+
+                  task: allocation?.id,
+                  span: remainingSpan + 1,
+                  next: next?.label,
+
+                  dragging: !!dragged,
+                  resizing: !!resizing
+                };
 
                 return (
                   <DateCell
                     key={j}
-                    member={member}
-                    date={date}
-                    dates={dates}
-                    allocations={allocations.values}
-                    resizing={resizing}
-                    dragged={dragged}
-                    isOver={isOver}
-                    setIsOver={setIsOver}
-                    memberTasks={memberTasks}
-                    remainingSpan={remainingSpan}
+                    index={j}
+                    cell={cell}
+                    allocation={allocation}
+                    addAllocation={allocations.add}
+                    setAllocation={allocations.set}
                     modules={modules.values}
                     tasks={tasks.values}
+                    addTask={addTask(member.id, date)}
+                    over={over}
+                    setOver={setOver}
                     handleDrop={handleDrop}
                     handleDrag={handleDrag}
-                    addTask={addTask}
                     setResizing={setResizing}
-                    dateIndex={j}
                   />
                 );
               })}
@@ -117,3 +122,17 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
     </table>
   );
 };
+
+function findNextFreeCell(
+  dates: ItemDate[],
+  allocations: Allocation[],
+  dateOffset: number
+): ItemDate | undefined {
+  for (let i = dateOffset; i < dates.length; i++) {
+    const date = dates[i];
+    const allocation = allocations.find((a) => a.iniDate === date.label);
+
+    if (!allocation) return date;
+    i += allocation.span - 1;
+  }
+}
