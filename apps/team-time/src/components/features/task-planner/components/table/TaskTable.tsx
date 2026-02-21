@@ -48,7 +48,8 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
   const addMember = () => {
     const member: Member = {
       id: crypto.randomUUID().slice(0, 8),
-      name: 'New Member'
+      name: '',
+      title: ''
     };
     members.add(member);
   };

@@ -47,8 +47,8 @@ export default function Page() {
       endDate: endDate.toISOString().slice(0, 10)
     },
     members: [
-      { id: '0000000000001', name: 'John Doe' },
-      { id: '0000000000002', name: 'Jane Doe' }
+      { id: '0000000000001', name: 'John Doe', title: 'Developer' },
+      { id: '0000000000002', name: 'Jane Doe', title: 'Designer' }
     ],
     modules: [
       { id: 'MD1', name: 'Module 1', color: 'bg-red-500' },

@@ -62,7 +62,7 @@ export const TaskBox: React.FC<{
         style={{ width: calcWidth(allocation.span, 5, 2) }}
         className={`h-full group
             border border-slate-600 rounded-lg
-            bg-slate-500 text-slate-200
+            bg-slate-50 text-slate-900
             overflow-hidden relative
             shadow-[0_0_5px] shadow-slate-900
           `}
@@ -85,7 +85,7 @@ export const TaskBox: React.FC<{
             />
             <div className="text-md text-left ml-2">{task.title}</div>
           </div>
-          <div className="text-sm text-left text-gray-900">
+          <div className="text-sm text-left text-gray-400">
             <div>{task.description}</div>
             <div>{mod?.name}</div>
           </div>
@@ -121,6 +121,12 @@ const TaskBoxActions: React.FC<{
         onDuplicate(allocation);
       },
       children: <CloneIcon className="h-4 w-4 text-slate-100" />
+    },
+    {
+      onClick: () => {
+        onDuplicate(allocation);
+      },
+      children: <CloneIcon className="h-4 w-4 text-slate-100" />
     }
   ];
 
@@ -136,7 +142,7 @@ const TaskBoxActions: React.FC<{
         <button
           key={i}
           className={`
-              p-1 rounded-full 
+              p-1.5 rounded-lg 
               shadow-sm hover:brightness-110
               bg-gray-400
               hover:${module?.color ?? 'bg-gray-400'}
