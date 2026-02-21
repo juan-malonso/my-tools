@@ -6,7 +6,7 @@ import { CreateTaskBox } from './CreateTaskBox';
 import { DropBox } from './DropBox';
 import { TaskBox } from './TaskBox';
 
-export const CellBox: React.FC<{
+export interface CellBoxProps {
   allocation: Allocation | undefined;
   modules: Module[];
   tasks: Task[];
@@ -15,8 +15,22 @@ export const CellBox: React.FC<{
   onDrag: (e: DragEvent<HTMLDivElement>, allocation: Allocation) => void;
   isResizing: boolean;
   isDragged: boolean;
+  dragged: Allocation | undefined;
   isOver: { enable: boolean; block: boolean; span: number };
-}> = ({ allocation, modules, tasks, addTask, onResize, onDrag, isResizing, isDragged, isOver }) => {
+}
+
+export const CellBox: React.FC<CellBoxProps> = ({
+  allocation,
+  modules,
+  tasks,
+  addTask,
+  onResize,
+  onDrag,
+  isResizing,
+  isDragged,
+  dragged,
+  isOver
+}) => {
   const data = [];
 
   if (isOver.enable) {
@@ -42,7 +56,7 @@ export const CellBox: React.FC<{
         </div>
       );
     }
-  } else {
+  } else if (!dragged) {
     data.push(
       <div className="absolute h-full w-full top-0 left-0">
         <CreateTaskBox onClick={addTask} />

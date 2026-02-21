@@ -1,3 +1,5 @@
+import type { Allocation } from '@/models';
+
 export const DATE_H = 70;
 export interface ItemDate {
   label: string;
@@ -77,3 +79,22 @@ export function calWidth(spans: number, width: number, border: number, margin = 
   const crossBorder = (spans - 1) * border - margin;
   return `w-[${(spansWidth + crossBorder).toFixed()}px]`;
 }
+
+export const getSpanDates = (dates: ItemDate[], date: string, span: number) => {
+  const dateIndex = dates.findIndex((d) => d.label === date);
+  return dates.slice(dateIndex, dateIndex + span);
+};
+
+export const isCellOccupied = (
+  dates: ItemDate[],
+  allocations: Allocation[],
+  allocation: { id: string; memberId: string; iniDate: string; span: number }
+) => {
+  const draggedDates = getSpanDates(dates, allocation.iniDate, allocation.span);
+
+  return allocations.some((a) => {
+    if (a.memberId !== allocation.memberId || a.id === allocation.id) return false;
+    const aDates = getSpanDates(dates, a.iniDate, a.span);
+    return draggedDates.some((d) => aDates.includes(d));
+  });
+};

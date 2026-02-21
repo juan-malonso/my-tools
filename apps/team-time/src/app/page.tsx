@@ -5,8 +5,8 @@ import { useMemo, useState } from 'react';
 import { BodyGrid } from '@packages/layout';
 import Script from 'next/script';
 
-import { Body } from '@/components/body';
-import { PageIcon } from '@/components/icons';
+import { TaskPlanner } from '@/components/features/task-planner';
+import { PageIcon } from '@/components/common/icons';
 import {
   type Allocation,
   type Member,
@@ -85,7 +85,7 @@ export default function Page() {
         </div>
       }
     >
-      <Body config={config} />
+      <TaskPlanner config={config} />
     </BodyGrid>
   );
 }

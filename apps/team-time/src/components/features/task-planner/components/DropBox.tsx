@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CELL_W } from '../utils';
+import { CELL_W } from '../utils/handlers';
 
 function calcWidth(span: number, margin = 5, border = 2) {
   return CELL_W * span - margin * 2 + (span - 1) * border;

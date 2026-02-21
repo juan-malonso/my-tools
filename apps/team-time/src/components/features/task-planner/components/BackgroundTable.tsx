@@ -14,16 +14,16 @@ import {
   type ItemMonth,
   type ItemWeek,
   USER_W
-} from './utils';
+} from '../utils/handlers';
 
-interface BodyBackgroundProps {
+interface BackgroundTableProps {
   config: Config;
 }
 
 const borderStyle = 'border-slate-500';
 const headerStyle = 'text-slate-100 p-2';
 
-export const BodyBackgroundTable: React.FC<BodyBackgroundProps> = ({ config }) => {
+export const BackgroundTable: React.FC<BackgroundTableProps> = ({ config }) => {
   const { general } = config;
 
   const dates = getDates(general.iniDate, general.endDate);
@@ -63,7 +63,7 @@ export const BodyBackgroundTable: React.FC<BodyBackgroundProps> = ({ config }) =
         <tr className={`divide-x-2 ${borderStyle} h-full w-full`}>
           <SpaceBox />
           {dates.map((d, i) => {
-            return <CellBox key={i} date={d} last={i === dates.length - 1} />;
+            return <BackgroundCell key={i} date={d} last={i === dates.length - 1} />;
           })}
         </tr>
       </tbody>
@@ -121,7 +121,7 @@ const DayBox: React.FC<{ date: ItemDate }> = ({ date }) => {
   );
 };
 
-export const CellBox: React.FC<{ date: ItemDate; last: boolean }> = ({ date, last }) => {
+export const BackgroundCell: React.FC<{ date: ItemDate; last: boolean }> = ({ date, last }) => {
   const color = cellColor(date, 'b');
   const round = last ? 'rounded-br-2xl' : '';
 

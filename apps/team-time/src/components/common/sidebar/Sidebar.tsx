@@ -25,7 +25,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ config }) => {
       {/* Cabecera del Sidebar alineada con la cabecera del Body */}
       <div
         style={{
-          height: `${headerHeight}px`,
+          height: `${String(headerHeight)}px`,
           display: 'flex',
           alignItems: 'end',
           justifyContent: 'center',
@@ -45,7 +45,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ config }) => {
           <div
             key={member.id}
             style={{
-              height: `${rowHeight}px`,
+              height: `${String(rowHeight)}px`,
               display: 'flex',
               alignItems: 'center',
               padding: '0 16px',

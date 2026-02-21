@@ -2,7 +2,7 @@ import React, { type DragEvent } from 'react';
 
 import type { Allocation, Module, Task } from '@/models';
 
-import { CELL_W } from '../utils';
+import { CELL_W } from '../utils/handlers';
 
 function calcWidth(span: number, margin = 5, border = 2) {
   return CELL_W * span - margin * 2 + (span - 1) * border;
@@ -46,7 +46,7 @@ export const TaskBox: React.FC<{
   return (
     <div className="h-full w-full p-[5px] overflow-visible" onClick={handleClick}>
       <div
-        draggable
+        draggable={!isResizing}
         onDrag={handleDrag}
         style={{ width: calcWidth(allocation.span, 5, 2) }}
         className={`h-full 
@@ -60,6 +60,7 @@ export const TaskBox: React.FC<{
           position="left"
           onResize={(e: React.MouseEvent) => {
             e.stopPropagation();
+            e.preventDefault();
             onResize(e, allocation.id, 'left');
           }}
         />
@@ -75,6 +76,7 @@ export const TaskBox: React.FC<{
           position="right"
           onResize={(e: React.MouseEvent) => {
             e.stopPropagation();
+            e.preventDefault();
             onResize(e, allocation.id, 'right');
           }}
         />
