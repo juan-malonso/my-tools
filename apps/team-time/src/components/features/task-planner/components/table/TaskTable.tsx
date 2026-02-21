@@ -67,7 +67,7 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
               className={`divide-x-2 w-full border-b-2 border-slate-500`}
               style={{ height: CELL_H, width: CELL_W * dates.length }}
             >
-              <MemberBox key={i} member={member} />
+              <MemberBox key={i} member={member} setMember={members.set} />
               {dates.map((date, j) => {
                 const allocation = memberTasks.find(
                   (a) => dragged?.id !== a.id && a.iniDate === date.label
