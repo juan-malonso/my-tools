@@ -25,8 +25,8 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
   const addTask = (memberId: string, date: ItemDate) => () => {
     const task: Task = {
       id: crypto.randomUUID().slice(0, 8),
-      title: 'Nueva Tarea',
-      description: 'Descripción por defecto',
+      title: 'New Task With',
+      description: 'Default description',
       ticket: []
     };
 
@@ -49,7 +49,8 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
     const member: Member = {
       id: crypto.randomUUID().slice(0, 8),
       name: '',
-      title: ''
+      title: '',
+      color: ''
     };
     members.add(member);
   };

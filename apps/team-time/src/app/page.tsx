@@ -1,12 +1,12 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { BodyGrid } from '@packages/layout';
 import Script from 'next/script';
 
-import { PageIcon } from '@/components/common/icons';
-import { TaskPlanner } from '@/components/features/task-planner';
+import { PageIcon, SettingIcon } from '@/components/common/icons';
+import { SettingsModal, TaskPlanner } from '@/components/features/task-planner';
 import {
   type Allocation,
   type Member,
@@ -38,68 +38,64 @@ function getDate(date: Date, period: 'day' | 'week' | 'month', diff: number) {
 export default function Page() {
   const date = new Date();
 
-  const [iniDate /*, setIniDate*/] = useState<Date>(getDate(date, 'day', -2));
-  const [endDate /*, setEndDate*/] = useState<Date>(getDate(date, 'month', 2));
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [iniDate, setIniDate] = useState<Date>(getDate(date, 'day', -2));
+  const [endDate, setEndDate] = useState<Date>(getDate(date, 'month', 2));
 
   const config = useConfig({
     general: {
       iniDate: iniDate.toISOString().slice(0, 10),
       endDate: endDate.toISOString().slice(0, 10)
     },
-    members: [
-      { id: '0000000000001', name: 'John Doe', title: 'Developer' },
-      { id: '0000000000002', name: 'Jane Doe', title: 'Designer' }
-    ],
-    modules: [
-      { id: 'MD1', name: 'Module 1', color: 'red-500' },
-      { id: 'MD2', name: 'Module 2', color: 'green-500' },
-      { id: 'MD3', name: 'Module 3', color: 'orange-500' }
-    ],
-    tasks: [
-      {
-        id: '0000000000001',
-        title: 'Task 1',
-        description: 'Description 1',
-        ticket: [
-          { id: 'IDV-2231', title: 'Ticket 1' },
-          { id: 'IDV-2233', title: 'Ticket 2' },
-          { id: 'IDV-2234', title: 'Ticket 3' }
-        ]
-      },
-      {
-        id: '0000000000002',
-        title: 'Task 2',
-        description: 'Description 2',
-        ticket: [{ id: 'IDV-2231', title: 'Ticket 1' }]
-      }
-    ],
-    allocations: [
-      {
-        id: '0000000000001',
-        iniDate: getDate(date, 'day', 1).toISOString().slice(0, 10),
-        span: 3,
-        memberId: '0000000000001',
-        taskId: '0000000000001',
-        moduleId: 'MD1'
-      },
-      {
-        id: '0000000000002',
-        iniDate: getDate(date, 'day', 2).toISOString().slice(0, 10),
-        span: 1,
-        memberId: '0000000000002',
-        taskId: '0000000000002',
-        moduleId: 'MD1'
-      },
-      {
-        id: '0000000000003',
-        iniDate: getDate(date, 'day', 0).toISOString().slice(0, 10),
-        span: 1,
-        memberId: '0000000000002',
-        taskId: '0000000000001',
-        moduleId: 'MD1'
-      }
-    ]
+    members: [{ id: '-', name: '', title: '', color: '' }],
+    modules: [],
+    tasks: [],
+    allocations: []
   });
+
+  const handleExport = () => {
+    const data = {
+      general: {
+        iniDate: config.general.iniDate.toISOString().slice(0, 10),
+        endDate: config.general.endDate.toISOString().slice(0, 10)
+      },
+      members: config.members.values,
+      modules: config.modules.values,
+      tasks: config.tasks.values,
+      allocations: config.allocations.values
+    };
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'team-time-config.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const data = JSON.parse(event.target?.result as string) as External;
+        setIniDate(new Date(data.general.iniDate));
+        setEndDate(new Date(data.general.endDate));
+        config.members.raw(data.members);
+        config.modules.raw(data.modules);
+        config.tasks.raw(data.tasks);
+        config.allocations.raw(data.allocations);
+      } catch (error) {
+        console.error('Error importing file', error);
+        alert('Error importing file');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
 
   return (
     <BodyGrid
@@ -107,15 +103,49 @@ export default function Page() {
       headIcon="/favicon.ico"
       headStyles={<Script src="https://cdn.tailwindcss.com" />}
       headerTitle={
-        <div className="flex items-center gap-2 p-3">
-          <PageIcon />
-          <h1 className="text-xl font-bold tracking-tight">
-            Team<span className="text-sky-500"> Time</span>
-          </h1>
+        <div className="flex items-center justify-between w-full p-3">
+          <div className="flex items-center gap-2">
+            <PageIcon />
+            <h1 className="text-xl font-bold tracking-tight">
+              Team<span className="text-sky-500"> Time</span>
+            </h1>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={handleExport}
+              className="px-3 py-1 bg-slate-700 text-white rounded text-sm hover:bg-slate-600"
+            >
+              Export
+            </button>
+            <label className="px-3 py-1 bg-sky-600 text-white rounded text-sm hover:bg-sky-500 cursor-pointer">
+              Import
+              <input type="file" accept=".json" onChange={handleImport} className="hidden" />
+            </label>
+            <span className="px-2" />
+            <button
+              onClick={() => {
+                setIsSettingsOpen(true);
+              }}
+              className="px-1 py-1 bg-slate-700 text-white rounded text-sm hover:bg-slate-600"
+            >
+              <SettingIcon className="h-5 w-5" />
+            </button>
+          </div>
         </div>
       }
     >
       <TaskPlanner config={config} />
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => {
+          setIsSettingsOpen(false);
+        }}
+        modules={config.modules}
+        iniDate={iniDate}
+        setIniDate={setIniDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
+      />
     </BodyGrid>
   );
 }

@@ -61,11 +61,12 @@ export const TaskBox: React.FC<{
         onDrag={handleDrag}
         style={{ width: calcWidth(allocation.span, 5, 2) }}
         className={`h-full group
-            border border-slate-600 rounded-lg
-            bg-slate-50 text-slate-900
-            overflow-hidden relative
-            shadow-[0_0_5px] shadow-slate-900
-          `}
+          border border-slate-300/50 rounded-lg
+          bg-white/25 text-white
+          overflow-hidden relative
+          shadow-lg shadow-black/60
+          transition-colors duration-200
+        `}
       >
         <TaskBoxResize
           position="left"
@@ -75,18 +76,27 @@ export const TaskBox: React.FC<{
             onResize(e, allocation.id, 'left');
           }}
         />
+
         <TaskBoxModule module={mod} />
+
         <div className="p-1 pl-3 flex flex-col gap-1">
-          <div className="flex gap-1 text-sm">
-            <TaskBoxModuleSelector
-              modules={modules}
-              allocation={allocation}
-              onUpdateAllocation={onUpdateAllocation}
-            />
-            <div className="text-md">{task.title}</div>
+          <div className="text-sm line-clamp-2 leading-tight">
+            <div className="inline-block align-middle mr-1.5 h-full">
+              <TaskBoxModuleSelector
+                modules={modules}
+                allocation={allocation}
+                onUpdateAllocation={onUpdateAllocation}
+              />
+            </div>
+
+            <span className="text-md font-medium">{task.title}</span>
           </div>
-          <div className="text-sm text-slate-400">{task.description}</div>
-          <div className="flex gap-1 flex-wrap">
+
+          <div className="text-xs text-slate-300 truncate w-full" title={task.description}>
+            {task.description}
+          </div>
+
+          <div className="flex gap-1 flex-wrap mt-1">
             {task.ticket.map((t, i) => (
               <TaskBoxBadget key={i} module={mod}>
                 {t.id}
@@ -94,7 +104,9 @@ export const TaskBox: React.FC<{
             ))}
           </div>
         </div>
+
         <TaskBoxActions module={mod} allocation={allocation} onDuplicate={onDuplicate} />
+
         <TaskBoxResize
           position="right"
           onResize={(e: React.MouseEvent) => {
@@ -114,8 +126,9 @@ const TaskBoxBadget: React.FC<{ module?: Module; children: React.ReactNode }> = 
 }) => {
   return (
     <div
-      className={`px-1.5 py-0.5 rounded text-nowrap
-      bg-${module?.color ?? 'gray-400'} text-slate-100 text-xs
+      style={{ backgroundColor: module?.color ?? '#9ca3af' }}
+      className={`px-1 py-0.5 rounded text-nowrap
+      text-slate-50 text-xs
     `}
     >
       {children}
@@ -125,7 +138,10 @@ const TaskBoxBadget: React.FC<{ module?: Module; children: React.ReactNode }> = 
 
 const TaskBoxModule: React.FC<{ module?: Module }> = ({ module }) => {
   return (
-    <div className={`absolute left-0 top-0 bottom-0 w-1.5 bg-${module?.color ?? 'gray-400'}`} />
+    <div
+      style={{ backgroundColor: module?.color ?? '#9ca3af' }}
+      className={`absolute left-0 top-0 bottom-0 w-1.5`}
+    />
   );
 };
 
@@ -146,9 +162,9 @@ const TaskBoxModuleSelector: React.FC<{
       value={allocation.moduleId}
       onChange={onChange}
     >
-      {[{ id: '---' }, ...modules].map((mod, i) => (
+      {[{ id: '---', key: '---' } as Module, ...modules].map((mod, i) => (
         <option key={i} value={mod.id} className="text-black">
-          {mod.id}
+          {mod.key}
         </option>
       ))}
     </select>
@@ -180,11 +196,10 @@ const TaskBoxActions: React.FC<{
       {actions.map(({ onClick, children }, i) => (
         <button
           key={i}
+          style={{ backgroundColor: module?.color ?? '#9ca3af' }}
           className={`
               p-1.5 rounded-lg 
               shadow-sm hover:brightness-110
-              bg-gray-400
-              hover:bg-${module?.color ?? 'gray-400'}
             `}
           onClick={onClick}
         >

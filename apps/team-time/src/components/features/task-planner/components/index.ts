@@ -6,6 +6,4 @@ export * from './table/DateCell';
 export * from './table/TaskTable';
 export * from './table/BackgroundTable';
 export * from './dnd/DropBox';
-export * from './CellBox';
-export type { CellBoxProps } from './CellBox';
 export type { Over } from './table/DateCell';

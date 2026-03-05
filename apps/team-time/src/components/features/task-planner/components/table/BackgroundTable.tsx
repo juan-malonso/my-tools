@@ -84,9 +84,9 @@ const MonthBox: React.FC<{ month: ItemMonth }> = ({ month }) => {
     <th
       colSpan={month.span}
       style={{ height: MONTH_H }}
-      className={`${headerStyle} ${borderStyle} border-b-2 uppercase`}
+      className={`${headerStyle} ${borderStyle} border-b-2 uppercase text-left`}
     >
-      {month.label}
+      <span className="sticky left-0 px-2">{month.label}</span>
     </th>
   );
 };
@@ -96,9 +96,9 @@ const WeekBox: React.FC<{ week: ItemWeek }> = ({ week }) => {
     <th
       colSpan={week.span}
       style={{ height: WEEK_H }}
-      className={`${headerStyle} ${borderStyle} border-b-2 text-sm`}
+      className={`${headerStyle} ${borderStyle} border-b-2 text-sm text-left`}
     >
-      {week.label}
+      <span className="sticky left-0 px-2">{week.label}</span>
     </th>
   );
 };
@@ -113,7 +113,7 @@ const DayBox: React.FC<{ date: ItemDate }> = ({ date }) => {
     >
       <div className={`flex flex-col justify-center items-center text-lg`}>
         <div className="text-slate-400">
-          {date.date.toLocaleString('es-ES', { weekday: 'narrow' })}
+          {date.date.toLocaleString('en-US', { weekday: 'narrow' })}
         </div>
         <div className="">{date.label.slice(8, 10)}</div>
       </div>
@@ -135,7 +135,7 @@ export const BackgroundCell: React.FC<{ date: ItemDate; last: boolean }> = ({ da
 const today = new Date().toISOString().split('T')[0];
 
 function cellColor({ label, date }: ItemDate, dir: 't' | 'b' = 'b'): string {
-  const weekDay = date.toLocaleString('es-ES', { weekday: 'narrow' });
+  const weekDay = date.toLocaleString('en-US', { weekday: 'narrow' });
 
   const color = ['S', 'D'].includes(weekDay) ? 'bg-slate-700' : 'bg-slate-800';
 
