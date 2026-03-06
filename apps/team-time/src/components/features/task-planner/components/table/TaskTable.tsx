@@ -8,6 +8,7 @@ import { useResize } from '../../hooks/useResize';
 import { getDates, type ItemDate, CELL_H, DATE_H, CELL_W } from '../../utils/handlers';
 import { CreateMemberBox } from '../member/CreateMemberBox';
 import { MemberBox } from '../member/MemberBox';
+import { EditAllocationModal } from '../task/EditAllocationModal';
 
 interface TaskTableProps {
   config: Config;
@@ -21,11 +22,18 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
   const [handleDrag, handleDrop, dragged] = useDrag(dates, allocations);
 
   const [over, setOver] = React.useState<Over | undefined>(undefined);
+  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
+  const [selectedAllocation, setSelectedAllocation] = React.useState<Allocation | null>(null);
+
+  const handleEdit = (allocation: Allocation) => {
+    setSelectedAllocation(allocation);
+    setIsEditModalOpen(true);
+  };
 
   const addTask = (memberId: string, date: ItemDate) => () => {
     const task: Task = {
       id: crypto.randomUUID().slice(0, 8),
-      title: 'New Task With',
+      title: 'New Task',
       description: 'Default description',
       ticket: []
     };
@@ -56,72 +64,87 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
   };
 
   return (
-    <table className={`h-full w-full rounded-2xl`}>
-      <tbody>
-        {members.values.map((member, i) => {
-          const memberTasks = allocations.values.filter((a) => a.memberId === member.id);
+    <>
+      <table className={`h-full w-full rounded-2xl`}>
+        <tbody>
+          {members.values.map((member, i) => {
+            const memberTasks = allocations.values.filter((a) => a.memberId === member.id);
 
-          let remainingSpan = 0;
+            let remainingSpan = 0;
 
-          return (
-            <tr
-              key={i}
-              className={`divide-x-2 w-full border-b-2 border-slate-500`}
-              style={{ height: CELL_H, width: CELL_W * dates.length }}
-            >
-              <MemberBox key={i} member={member} setMember={members.set} />
-              {dates.map((date, j) => {
-                const allocation = memberTasks.find(
-                  (a) => dragged?.id !== a.id && a.iniDate === date.label
-                );
+            return (
+              <tr
+                key={i}
+                className={`divide-x-2 w-full border-b-2 border-slate-500`}
+                style={{ height: CELL_H, width: CELL_W * dates.length }}
+              >
+                <MemberBox key={i} member={member} setMember={members.set} />
+                {dates.map((date, j) => {
+                  const allocation = memberTasks.find(
+                    (a) => dragged?.id !== a.id && a.iniDate === date.label
+                  );
 
-                remainingSpan = Math.max(remainingSpan, allocation?.span ?? 0) - 1;
+                  remainingSpan = Math.max(remainingSpan, allocation?.span ?? 0) - 1;
 
-                const next = findNextFreeCell(dates, allocations.values, j);
+                  const next = findNextFreeCell(dates, allocations.values, j);
 
-                const cell: CellMetadata = {
-                  member,
-                  date,
+                  const cell: CellMetadata = {
+                    member,
+                    date,
 
-                  task: allocation?.id,
-                  span: remainingSpan + 1,
-                  next: next?.label,
+                    task: allocation?.id,
+                    span: remainingSpan + 1,
+                    next: next?.label,
 
-                  dragging: !!dragged,
-                  resizing: !!resizing
-                };
+                    dragging: !!dragged,
+                    resizing: !!resizing
+                  };
 
-                return (
-                  <DateCell
-                    key={j}
-                    index={j}
-                    cell={cell}
-                    allocation={allocation}
-                    addAllocation={allocations.add}
-                    setAllocation={allocations.set}
-                    modules={modules.values}
-                    tasks={tasks.values}
-                    addTask={addTask(member.id, date)}
-                    over={over}
-                    setOver={setOver}
-                    handleDrop={handleDrop}
-                    handleDrag={handleDrag}
-                    setResizing={setResizing}
-                  />
-                );
-              })}
-            </tr>
-          );
-        })}
+                  return (
+                    <DateCell
+                      key={j}
+                      index={j}
+                      cell={cell}
+                      allocation={allocation}
+                      addAllocation={allocations.add}
+                      setAllocation={allocations.set}
+                      modules={modules.values}
+                      tasks={tasks.values}
+                      addTask={addTask(member.id, date)}
+                      over={over}
+                      setOver={setOver}
+                      handleDrop={handleDrop}
+                      handleDrag={handleDrag}
+                      setResizing={setResizing}
+                      onEdit={handleEdit}
+                    />
+                  );
+                })}
+              </tr>
+            );
+          })}
 
-        <tr className={`w-full`} style={{ height: DATE_H }}>
-          <CreateMemberBox onClick={addMember} />
-          <td colSpan={1 + dates.length} />
-        </tr>
+          <tr className={`w-full`} style={{ height: DATE_H }}>
+            <CreateMemberBox onClick={addMember} />
+            <td colSpan={1 + dates.length} />
+          </tr>
 
-        <tr />
-      </tbody>
-    </table>
+          <tr />
+        </tbody>
+      </table>
+      <EditAllocationModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+        }}
+        allocation={selectedAllocation}
+        tasks={tasks}
+        modules={modules}
+        updateAllocation={allocations.set}
+        onDeleteAllocation={allocations.del}
+        defaultBadgeKey={config.general.defaultBadgeKey}
+      />
+    </>
   );
 };
 

@@ -1,6 +1,6 @@
 import React, { type DragEvent } from 'react';
 
-import { CloneIcon } from '@/components/common/icons';
+import { CloneIcon, PencilIcon } from '@/components/common/icons';
 import { CELL_W } from '@/components/features/task-planner';
 import type { Allocation, Module, Task } from '@/models';
 
@@ -16,6 +16,7 @@ export const TaskBox: React.FC<{
   onDrag: (e: DragEvent<HTMLDivElement>, allocation: Allocation) => void;
   onUpdateAllocation: (allocation: Allocation) => void;
   onDuplicate: (allocation: Allocation) => void;
+  onEdit: (allocation: Allocation) => void;
   isResizing: boolean;
 }> = ({
   allocation,
@@ -25,6 +26,7 @@ export const TaskBox: React.FC<{
   onDrag,
   onUpdateAllocation,
   onDuplicate,
+  onEdit,
   isResizing
 }) => {
   const task = tasks.find((t) => t.id === allocation.taskId);
@@ -82,7 +84,7 @@ export const TaskBox: React.FC<{
         <div className="p-1 pl-3 flex flex-col gap-1">
           <div className="text-sm line-clamp-2 leading-tight">
             <div className="inline-block align-middle mr-1.5 h-full">
-              <TaskBoxModuleSelector
+              <ModuleSelector
                 modules={modules}
                 allocation={allocation}
                 onUpdateAllocation={onUpdateAllocation}
@@ -105,7 +107,12 @@ export const TaskBox: React.FC<{
           </div>
         </div>
 
-        <TaskBoxActions module={mod} allocation={allocation} onDuplicate={onDuplicate} />
+        <TaskBoxActions
+          module={mod}
+          allocation={allocation}
+          onDuplicate={onDuplicate}
+          onEdit={onEdit}
+        />
 
         <TaskBoxResize
           position="right"
@@ -136,6 +143,8 @@ const TaskBoxBadget: React.FC<{ module?: Module; children: React.ReactNode }> = 
   );
 };
 
+import { ModuleSelector } from '../selectors/ModuleSelector';
+
 const TaskBoxModule: React.FC<{ module?: Module }> = ({ module }) => {
   return (
     <div
@@ -145,43 +154,24 @@ const TaskBoxModule: React.FC<{ module?: Module }> = ({ module }) => {
   );
 };
 
-const TaskBoxModuleSelector: React.FC<{
-  modules: Module[];
-  allocation: Allocation;
-  onUpdateAllocation: (allocation: Allocation) => void;
-}> = ({ modules, allocation, onUpdateAllocation }) => {
-  const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    onUpdateAllocation({ ...allocation, moduleId: e.target.value });
-  };
-
-  return (
-    <select
-      className={`bg-white text-slate-800 text-sm
-          border border-slate-500 rounded 
-          focus:outline-none focus:ring-0 focus:border-slate-300`}
-      value={allocation.moduleId}
-      onChange={onChange}
-    >
-      {[{ id: '---', key: '---' } as Module, ...modules].map((mod, i) => (
-        <option key={i} value={mod.id} className="text-black">
-          {mod.key}
-        </option>
-      ))}
-    </select>
-  );
-};
-
 const TaskBoxActions: React.FC<{
   module?: Module;
   allocation: Allocation;
   onDuplicate: (allocation: Allocation) => void;
-}> = ({ module, allocation, onDuplicate }) => {
+  onEdit: (allocation: Allocation) => void;
+}> = ({ module, allocation, onDuplicate, onEdit }) => {
   const actions: { onClick: () => void; children: React.ReactNode }[] = [
     {
       onClick: () => {
         onDuplicate(allocation);
       },
-      children: <CloneIcon className="h-4 w-4 text-slate-100" />
+      children: <CloneIcon className="h-3.5 w-3.5" />
+    },
+    {
+      onClick: () => {
+        onEdit(allocation);
+      },
+      children: <PencilIcon className="h-3.5 w-3.5" />
     }
   ];
 
@@ -198,8 +188,8 @@ const TaskBoxActions: React.FC<{
           key={i}
           style={{ backgroundColor: module?.color ?? '#9ca3af' }}
           className={`
-              p-1.5 rounded-lg 
-              shadow-sm hover:brightness-110
+              p-1.5 rounded-md bg-slate-700/50 hover:bg-slate-700
+              shadow-sm hover:brightness-125 border border-slate-50
             `}
           onClick={onClick}
         >

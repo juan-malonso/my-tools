@@ -1,3 +1,3 @@
 export * from './TaskPlanner';
-export * from './SettingsModal';
+export * from './settings/SettingsModal';
 export * from './utils';

@@ -41,11 +41,13 @@ export default function Page() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [iniDate, setIniDate] = useState<Date>(getDate(date, 'day', -2));
   const [endDate, setEndDate] = useState<Date>(getDate(date, 'month', 2));
+  const [defaultBadgeKey, setDefaultBadgeKey] = useState<string>('TASK');
 
   const config = useConfig({
     general: {
       iniDate: iniDate.toISOString().slice(0, 10),
-      endDate: endDate.toISOString().slice(0, 10)
+      endDate: endDate.toISOString().slice(0, 10),
+      defaultBadgeKey
     },
     members: [{ id: '-', name: '', title: '', color: '' }],
     modules: [],
@@ -57,7 +59,8 @@ export default function Page() {
     const data = {
       general: {
         iniDate: config.general.iniDate.toISOString().slice(0, 10),
-        endDate: config.general.endDate.toISOString().slice(0, 10)
+        endDate: config.general.endDate.toISOString().slice(0, 10),
+        defaultBadgeKey: config.general.defaultBadgeKey
       },
       members: config.members.values,
       modules: config.modules.values,
@@ -81,9 +84,10 @@ export default function Page() {
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
-        const data = JSON.parse(event.target?.result as string) as External;
+        const data = JSON.parse(event.target?.result as string) as unknown as External;
         setIniDate(new Date(data.general.iniDate));
         setEndDate(new Date(data.general.endDate));
+        setDefaultBadgeKey(data.general.defaultBadgeKey);
         config.members.raw(data.members);
         config.modules.raw(data.modules);
         config.tasks.raw(data.tasks);
@@ -141,10 +145,13 @@ export default function Page() {
           setIsSettingsOpen(false);
         }}
         modules={config.modules}
+        tasks={config.tasks}
         iniDate={iniDate}
         setIniDate={setIniDate}
         endDate={endDate}
         setEndDate={setEndDate}
+        defaultBadgeKey={defaultBadgeKey}
+        setDefaultBadgeKey={setDefaultBadgeKey}
       />
     </BodyGrid>
   );
@@ -161,7 +168,8 @@ function useConfig(external: External) {
     return {
       general: {
         iniDate: new Date(external.general.iniDate),
-        endDate: new Date(external.general.endDate)
+        endDate: new Date(external.general.endDate),
+        defaultBadgeKey: external.general.defaultBadgeKey
       },
 
       members,

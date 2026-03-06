@@ -3,3 +3,5 @@ export * from './PageIcon';
 export * from './ModuleIcon';
 export * from './SettingIcon';
 export * from './DeleteIcon';
+export * from './PencilIcon';
+

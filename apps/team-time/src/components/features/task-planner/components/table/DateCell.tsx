@@ -47,6 +47,7 @@ interface DateCellProps {
   handleDrop: (e: DragEvent<HTMLDivElement>, memberId: string, date: string) => void;
   handleDrag: (e: DragEvent<HTMLDivElement>, allocation: Allocation) => void;
   setResizing: (resize: Resize) => void;
+  onEdit: (allocation: Allocation) => void;
 }
 
 export const DateCell: React.FC<DateCellProps> = ({
@@ -62,7 +63,8 @@ export const DateCell: React.FC<DateCellProps> = ({
   setOver,
   handleDrop,
   handleDrag,
-  setResizing
+  setResizing,
+  onEdit
 }) => {
   const { isResizing, isDragging, isOver, isTask, isTaskExtension } = getRenderState(
     cell,
@@ -111,6 +113,7 @@ export const DateCell: React.FC<DateCellProps> = ({
               onDrag={handleDrag}
               onUpdateAllocation={setAllocation}
               onDuplicate={onDuplicate}
+              onEdit={onEdit}
               isResizing={isResizing}
             />
           </div>

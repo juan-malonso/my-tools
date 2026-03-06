@@ -15,6 +15,7 @@ export interface External {
   general: {
     iniDate: string;
     endDate: string;
+    defaultBadgeKey: string;
   };
 
   members: Member[];
@@ -28,6 +29,7 @@ export interface Config {
   general: {
     iniDate: Date;
     endDate: Date;
+    defaultBadgeKey: string;
   };
 
   members: Utils<Member>;

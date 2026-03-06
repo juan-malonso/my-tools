@@ -35,11 +35,11 @@ export const MemberBox: React.FC<{ member: Member; setMember: (member: Member) =
 
   return (
     <td className="">
-      <div style={{ height: CELL_H, width: USER_W }} className="h-full w-full p-2">
+      <div style={{ height: CELL_H, width: USER_W }} className="h-full w-full p-1">
         <div
           className={`
-            h-full w-full p-2 
-            border border-1 border-slate-100 rounded-lg
+            h-full w-full p-1
+            border border-slate-300/50 rounded-lg
             bg-slate-800 text-white
             flex`}
         >
