@@ -1,14 +1,14 @@
 import React from 'react';
 
+import { CreateMemberBox } from '@/components/features/task-planner/components/member/CreateMemberBox';
+import { MemberBox } from '@/components/features/task-planner/components/member/MemberBox';
+import { TaskEdit } from '@/components/features/task-planner/components/task/TaskEdit';
 import type { Allocation, Config, Member, Task } from '@/models';
 
 import { type CellMetadata, DateCell, type Over } from './DateCell';
 import { useDrag } from '../../hooks/useDrag';
 import { useResize } from '../../hooks/useResize';
 import { getDates, type ItemDate, CELL_H, DATE_H, CELL_W } from '../../utils/handlers';
-import { CreateMemberBox } from '../member/CreateMemberBox';
-import { MemberBox } from '../member/MemberBox';
-import { EditAllocationModal } from '../task/EditAllocationModal';
 
 interface TaskTableProps {
   config: Config;
@@ -132,7 +132,7 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
           <tr />
         </tbody>
       </table>
-      <EditAllocationModal
+      <TaskEdit
         isOpen={isEditModalOpen}
         onClose={() => {
           setIsEditModalOpen(false);

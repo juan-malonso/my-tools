@@ -1,9 +1,9 @@
 import type { ItemDate } from './handlers';
-import type { Over } from '../components/table/DateCell';
 import type { Resize } from '../hooks/useResize';
 
 import type { DragEvent, MouseEvent } from 'react';
 
+import type { Over } from '@/components/features/task-planner/components/table/DateCell';
 import type { Allocation, Member } from '@/models';
 
 export const handleDragOver = (e: DragEvent<HTMLDivElement>) => {

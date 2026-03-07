@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 
+import { CloseButton } from '@component/forms';
+import { Modal } from '@component/surfaces';
+
 import { ModuleIcon, PageIcon, SettingIcon } from '@/components/common/icons';
 import { type Module, type Task, type Utils } from '@/models';
 
@@ -47,74 +50,51 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   );
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div
-        className="bg-slate-800 w-[80%] h-[80%] max-w-6xl rounded-2xl shadow-2xl flex overflow-hidden border border-slate-600"
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
-        {/* Sidebar */}
-        <div className="w-64 bg-slate-900/50 border-r border-slate-700 flex flex-col">
-          <div className="p-6 border-b border-slate-700/50">
+    <>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        sidenav={
+          <div className="flex flex-col gap-4">
             <h2 className="text-xl font-bold text-white tracking-tight">Settings</h2>
-          </div>
-          <nav className="flex-1 p-4 space-y-2">
-            <SidebarItem
-              label="General"
-              isActive={activeSection === 'general'}
-              onClick={() => {
-                setActiveSection('general');
-              }}
-              icon={<SettingIcon className="h-5 w-5" />}
-            />
-            <SidebarItem
-              label="Modules"
-              isActive={activeSection === 'modules'}
-              onClick={() => {
-                setActiveSection('modules');
-              }}
-              icon={<ModuleIcon className="h-5 w-5" />}
-            />
-            <SidebarItem
-              label="Tasks"
-              isActive={activeSection === 'tasks'}
-              onClick={() => {
-                setActiveSection('tasks');
-              }}
-              icon={<PageIcon className="h-5 w-5" />}
-            />
-          </nav>
-          <div className="p-4 border-t border-slate-700/50">
-            <button
-              onClick={onClose}
-              className="w-full flex items-center justify-center gap-2 text-slate-400 hover:text-white hover:bg-slate-700/50 px-4 py-2 rounded-lg transition-colors"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-              <span>Close</span>
-            </button>
-          </div>
-        </div>
 
-        {/* Content */}
-        <div className="flex-1 bg-slate-800 flex flex-col min-w-0">
-          <div className="flex-1 overflow-y-auto p-8">
+            <nav className="flex-1 space-y-2">
+              <SidebarItem
+                label="General"
+                isActive={activeSection === 'general'}
+                onClick={() => {
+                  setActiveSection('general');
+                }}
+                icon={<SettingIcon className="h-5 w-5" />}
+              />
+              <SidebarItem
+                label="Modules"
+                isActive={activeSection === 'modules'}
+                onClick={() => {
+                  setActiveSection('modules');
+                }}
+                icon={<ModuleIcon className="h-5 w-5" />}
+              />
+              <SidebarItem
+                label="Tasks"
+                isActive={activeSection === 'tasks'}
+                onClick={() => {
+                  setActiveSection('tasks');
+                }}
+                icon={<PageIcon className="h-5 w-5" />}
+              />
+            </nav>
+          </div>
+        }
+        footer={
+          <div className="flex justify-end items-center">
+            <CloseButton size="md" onClick={onClose}>
+              Close
+            </CloseButton>
+          </div>
+        }
+        body={
+          <div className="flex flex-col">
             {activeSection === 'general' && (
               <GeneralSettings
                 iniDate={iniDate}
@@ -138,9 +118,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               />
             )}
           </div>
-        </div>
-      </div>
-    </div>
+        }
+      />
+    </>
   );
 };
 

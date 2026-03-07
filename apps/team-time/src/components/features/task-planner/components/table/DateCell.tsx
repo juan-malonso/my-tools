@@ -2,6 +2,7 @@ import type { Resize } from '../../hooks/useResize';
 
 import React, { type DragEvent } from 'react';
 
+import { DropBox } from '@/components/features/task-planner/components/dnd/DropBox';
 import type { Allocation, Member, Module, Task } from '@/models';
 
 import {
@@ -11,9 +12,8 @@ import {
   onResize
 } from '../../utils/dnd-handlers';
 import { type ItemDate, CELL_H, CELL_W } from '../../utils/handlers';
-import { DropBox } from '../dnd/DropBox';
-import { CreateTaskBox } from '../task/CreateTaskBox';
-import { TaskBox } from '../task/TaskBox';
+import { TaskPlaceholder } from '../task';
+import { TaskBox } from '../task';
 
 export interface Over {
   memberId: string;
@@ -111,7 +111,7 @@ export const DateCell: React.FC<DateCellProps> = ({
               modules={modules}
               onResize={onResize(allocation, index, setResizing)}
               onDrag={handleDrag}
-              onUpdateAllocation={setAllocation}
+              updateAllocation={setAllocation}
               onDuplicate={onDuplicate}
               onEdit={onEdit}
               isResizing={isResizing}
@@ -144,7 +144,7 @@ export const DateCell: React.FC<DateCellProps> = ({
       children = (
         <div className="relative h-full w-full ">
           <div key="createbox" className="absolute h-full w-full top-0 left-0">
-            <CreateTaskBox onClick={addTask} />
+            <TaskPlaceholder onClick={addTask} />
           </div>
         </div>
       );
