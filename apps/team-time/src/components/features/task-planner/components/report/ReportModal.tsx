@@ -178,6 +178,9 @@ export const ReportModal: React.FC<{
                   /* Formato de texto */
                   [&_strong]:text-white [&_strong]:font-bold
                   [&_code]:bg-slate-900 [&_code]:px-1 [&_code]:rounded [&_code]:text-sky-400 [&_code]:font-mono
+
+                  /* Enlaces */
+                  [&_a]:text-sky-400 [&_a]:underline [&_a]:hover:text-sky-300
                   
                   /* Bloques de código */
                   [&_pre]:bg-slate-900 [&_pre]:p-3 [&_pre]:rounded-md [&_pre]:my-4 [&_pre]:overflow-x-auto
@@ -241,14 +244,60 @@ export const generateWeeklyReport = ({
 
     if (memberAllocations.length > 0) {
       memberAllocations.sort((a, b) => a.iniDate.localeCompare(b.iniDate));
+      let lastHeader = '';
+
       memberAllocations.forEach((allocation) => {
         const task = tasks.find((t) => t.id === allocation.taskId);
         const mod = modules.find((m) => m.id === allocation.moduleId);
 
         if (task) {
-          const hours = calculateHours(allocation, member);
+          const taskStart = new Date(allocation.iniDate);
+          const taskEnd = new Date(taskStart);
+          taskEnd.setDate(taskStart.getDate() + allocation.span - 1);
 
-          text += `- **[${mod?.name ?? '---'}]** ${task.title}\n`;
+          const wStart = new Date(start);
+          wStart.setHours(0, 0, 0, 0);
+          const wEnd = new Date(end);
+          wEnd.setHours(0, 0, 0, 0);
+          const tStart = new Date(taskStart);
+          tStart.setHours(0, 0, 0, 0);
+          const tEnd = new Date(taskEnd);
+          tEnd.setHours(0, 0, 0, 0);
+
+          const isContinuation = tStart < wStart;
+          const isContinuing = tEnd > wEnd;
+
+          const displayStart = isContinuation ? wStart : tStart;
+          const displayEnd = isContinuing ? wEnd : tEnd;
+
+          const startDay = displayStart.toLocaleDateString('en-US', { weekday: 'long' });
+          const endDay = displayEnd.toLocaleDateString('en-US', { weekday: 'long' });
+          const dateRangeStr =
+            displayStart.getTime() !== displayEnd.getTime()
+              ? `${displayStart.toLocaleDateString()} - ${displayEnd.toLocaleDateString()}`
+              : displayStart.toLocaleDateString();
+
+          let header = `### ${startDay}`;
+          if (displayStart.getTime() !== displayEnd.getTime()) {
+            header += ` - ${endDay}`;
+          }
+          header += ` (${dateRangeStr})`;
+
+          if (header !== lastHeader) {
+            text += `${header}\n`;
+            lastHeader = header;
+          }
+
+          text += `- **[${mod?.name ?? '---'}]** ${task.title}`;
+
+          const flags = [];
+          if (isContinuation) flags.push('Continuation');
+          if (isContinuing) flags.push('Continues');
+
+          if (flags.length > 0) {
+            text += ` _(${flags.join(', ')})_`;
+          }
+          text += `\n`;
 
           if (task.description) {
             const desc = task.description.replace(/\n/g, '\n    ');
@@ -260,17 +309,14 @@ export const generateWeeklyReport = ({
               .filter((t) => t.id)
               .map((t) => {
                 const url = baseUrl ? `${baseUrl.replace(/\/$/, '')}/${t.id}` : null;
-                const key = url ? t.id : `\`${t.id}\``;
-                return `${key}${t.title ? `: ${t.title}` : ''}`;
+                const key = url ? `[${t.id}](${url})` : `\`${t.id}\``;
+                return `    - ${key}${t.title ? `: ${t.title}` : ''}`;
               })
-              .join(', ');
+              .join('\n');
             if (tickets) {
-              text += `    - Tickets: ${tickets}\n`;
+              text += `${tickets}\n`;
             }
           }
-
-          text += `    - Time: ${allocation.span.toString()} days (~${hours.toString()}h)\n`;
-          text += `    - Start Date: ${allocation.iniDate}\n`;
         }
       });
     } else {
@@ -282,15 +328,13 @@ export const generateWeeklyReport = ({
   return text;
 };
 
-function calculateHours(allocation: Allocation, member: Member): number {
+export function calculateHours(allocation: Allocation, member: Member): number {
   let total = 0;
   const startDate = new Date(allocation.iniDate);
   for (let i = 0; i < allocation.span; i++) {
     const current = new Date(startDate);
     current.setDate(startDate.getDate() + i);
-    // getDay(): 0 = Sun, 1 = Mon...
     const dayIndex = current.getDay();
-    // member.schedule: assume 0=Mon, 6=Sun based on [8.5, 8.5, 8.5, 8.5, 6, 0, 0]
     const scheduleIndex = (dayIndex + 6) % 7;
     total += member.schedule[scheduleIndex] || 0;
   }

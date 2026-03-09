@@ -182,7 +182,8 @@ function useConfig(external: External) {
       general: {
         iniDate: new Date(external.general.iniDate),
         endDate: new Date(external.general.endDate),
-        defaultBadgeKey: external.general.defaultBadgeKey
+        defaultBadgeKey: external.general.defaultBadgeKey,
+        baseUrl: external.general.baseUrl ?? ''
       },
 
       members,
