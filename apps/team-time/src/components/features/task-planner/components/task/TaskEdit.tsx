@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { CloseButton, DeleteButton } from '@component/forms';
 import { Modal } from '@component/surfaces';
@@ -6,7 +6,6 @@ import { Modal } from '@component/surfaces';
 import { type Allocation, type Module, type Task, type Utils } from '@/models';
 
 import { TaskSettings } from './TaskSettings';
-import { ModuleSelector, TaskSelector } from '../selectors';
 
 interface TaskEditProps {
   isOpen: boolean;
@@ -14,8 +13,7 @@ interface TaskEditProps {
   allocation: Allocation | null;
   tasks: Utils<Task>;
   modules: Utils<Module>;
-  updateAllocation: (allocation: Allocation) => void;
-  onDeleteAllocation: (allocation: Allocation) => void;
+  onDeleteAllocation: (id: string) => void;
   defaultBadgeKey: string;
 }
 
@@ -25,7 +23,6 @@ export const TaskEdit: React.FC<TaskEditProps> = ({
   allocation,
   tasks,
   modules,
-  updateAllocation,
   onDeleteAllocation,
   defaultBadgeKey
 }) => {
@@ -39,7 +36,7 @@ export const TaskEdit: React.FC<TaskEditProps> = ({
   };
 
   const handleDelete = () => {
-    onDeleteAllocation(allocation);
+    onDeleteAllocation(allocation.id);
     onClose();
   };
 

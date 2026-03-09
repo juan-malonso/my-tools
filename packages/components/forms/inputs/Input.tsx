@@ -20,8 +20,8 @@ const variantStyles: Record<InputVariant, string> = {
 
 const sizeStyles: Record<InputSize, string> = {
   sm: 'px-1 py-1.5 text-xs',
-  md: 'px-2 py-2 text-sm',
-  lg: 'px-2 py-3 text-base'
+  md: 'px-1 py-2 text-sm',
+  lg: 'px-1 py-3 text-base'
 };
 
 export const Input: React.FC<InputProps> = ({

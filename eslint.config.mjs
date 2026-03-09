@@ -60,7 +60,7 @@ export default tseslint.config(
       complexity: ['error', 10],
       'max-depth': ['error', 3],
       'max-nested-callbacks': ['error', 3],
-      'max-params': ['error', 4],
+      'max-params': ['error', 5],
 
       // Function Length
       'max-lines-per-function': ['error', 200],

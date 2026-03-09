@@ -41,15 +41,25 @@ export default function Page() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [iniDate, setIniDate] = useState<Date>(getDate(date, 'day', -2));
   const [endDate, setEndDate] = useState<Date>(getDate(date, 'month', 2));
-  const [defaultBadgeKey, setDefaultBadgeKey] = useState<string>('TASK');
+  const [defaultBadgeKey, setDefaultBadgeKey] = useState<string>('TSK-001');
+  const [baseUrl, setBaseUrl] = useState<string>('');
 
   const config = useConfig({
     general: {
       iniDate: iniDate.toISOString().slice(0, 10),
       endDate: endDate.toISOString().slice(0, 10),
-      defaultBadgeKey
+      defaultBadgeKey,
+      baseUrl
     },
-    members: [{ id: '-', name: '', title: '', color: '' }],
+    members: [
+      {
+        id: '-',
+        name: '',
+        title: '',
+        color: '',
+        schedule: [8, 8, 8, 8, 8, 0, 0]
+      }
+    ],
     modules: [],
     tasks: [],
     allocations: []
@@ -60,7 +70,8 @@ export default function Page() {
       general: {
         iniDate: config.general.iniDate.toISOString().slice(0, 10),
         endDate: config.general.endDate.toISOString().slice(0, 10),
-        defaultBadgeKey: config.general.defaultBadgeKey
+        defaultBadgeKey: config.general.defaultBadgeKey,
+        baseUrl: config.general.baseUrl
       },
       members: config.members.values,
       modules: config.modules.values,
@@ -88,6 +99,7 @@ export default function Page() {
         setIniDate(new Date(data.general.iniDate));
         setEndDate(new Date(data.general.endDate));
         setDefaultBadgeKey(data.general.defaultBadgeKey);
+        setBaseUrl(data.general.baseUrl ?? '');
         config.members.raw(data.members);
         config.modules.raw(data.modules);
         config.tasks.raw(data.tasks);
@@ -144,14 +156,15 @@ export default function Page() {
         onClose={() => {
           setIsSettingsOpen(false);
         }}
-        modules={config.modules}
-        tasks={config.tasks}
+        config={config}
         iniDate={iniDate}
         setIniDate={setIniDate}
         endDate={endDate}
         setEndDate={setEndDate}
         defaultBadgeKey={defaultBadgeKey}
         setDefaultBadgeKey={setDefaultBadgeKey}
+        baseUrl={baseUrl}
+        setBaseUrl={setBaseUrl}
       />
     </BodyGrid>
   );
@@ -194,8 +207,8 @@ function useCustomState<T extends { id: string }>(value: T[]): Utils<T> {
     set: (value: T) => {
       setValues(values.map((m) => (m.id === value.id ? value : m)));
     },
-    del: (value: T) => {
-      setValues(values.filter((m) => m.id !== value.id));
+    del: (id: string) => {
+      setValues(values.filter((m) => m.id !== id));
     },
     raw: (values: T[]) => {
       setValues(values);

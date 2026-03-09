@@ -1,5 +1,4 @@
 export * from './member/MemberBox';
-export * from './member/CreateMemberBox';
 export * from './task';
 export * from './table/DateCell';
 export * from './table/TaskTable';

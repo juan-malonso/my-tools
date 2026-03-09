@@ -1,14 +1,13 @@
 import React from 'react';
 
-import { CreateMemberBox } from '@/components/features/task-planner/components/member/CreateMemberBox';
-import { MemberBox } from '@/components/features/task-planner/components/member/MemberBox';
-import { TaskEdit } from '@/components/features/task-planner/components/task/TaskEdit';
-import type { Allocation, Config, Member, Task } from '@/models';
+import type { Allocation, Config, Task } from '@/models';
 
 import { type CellMetadata, DateCell, type Over } from './DateCell';
 import { useDrag } from '../../hooks/useDrag';
 import { useResize } from '../../hooks/useResize';
-import { getDates, type ItemDate, CELL_H, DATE_H, CELL_W } from '../../utils/handlers';
+import { getDates, type ItemDate, CELL_H, CELL_W } from '../../utils/handlers';
+import { MemberBox } from '../member/MemberBox';
+import { TaskEdit } from '../task/TaskEdit';
 
 interface TaskTableProps {
   config: Config;
@@ -53,16 +52,6 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
     allocations.add(allocation);
   };
 
-  const addMember = () => {
-    const member: Member = {
-      id: crypto.randomUUID().slice(0, 8),
-      name: '',
-      title: '',
-      color: ''
-    };
-    members.add(member);
-  };
-
   return (
     <>
       <table className={`h-full w-full rounded-2xl`}>
@@ -78,7 +67,21 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
                 className={`divide-x-2 w-full border-b-2 border-slate-500`}
                 style={{ height: CELL_H, width: CELL_W * dates.length }}
               >
-                <MemberBox key={i} member={member} setMember={members.set} />
+                <MemberBox
+                  key={i}
+                  member={member}
+                  setMember={members.set}
+                  onDelete={() => {
+                    members.del(member.id);
+                    const memberAllocations = allocations.values.filter(
+                      (a) => a.memberId === member.id
+                    );
+                    for (const allocation of memberAllocations) {
+                      allocations.del(allocation.id);
+                    }
+                  }}
+                />
+
                 {dates.map((date, j) => {
                   const allocation = memberTasks.find(
                     (a) => dragged?.id !== a.id && a.iniDate === date.label
@@ -124,11 +127,6 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
             );
           })}
 
-          <tr className={`w-full`} style={{ height: DATE_H }}>
-            <CreateMemberBox onClick={addMember} />
-            <td colSpan={1 + dates.length} />
-          </tr>
-
           <tr />
         </tbody>
       </table>
@@ -140,7 +138,6 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
         allocation={selectedAllocation}
         tasks={tasks}
         modules={modules}
-        updateAllocation={allocations.set}
         onDeleteAllocation={allocations.del}
         defaultBadgeKey={config.general.defaultBadgeKey}
       />

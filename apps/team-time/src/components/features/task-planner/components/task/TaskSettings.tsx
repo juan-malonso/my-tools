@@ -45,6 +45,7 @@ export const TaskSettings: React.FC<{
         value={task.description}
         size="sm"
         placeholder="Task description"
+        className="h-full"
         onChange={(e) => {
           setTask({ ...task, description: e.target.value });
         }}

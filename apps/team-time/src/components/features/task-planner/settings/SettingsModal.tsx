@@ -4,41 +4,46 @@ import { CloseButton } from '@component/forms';
 import { Modal } from '@component/surfaces';
 
 import { ModuleIcon, PageIcon, SettingIcon } from '@/components/common/icons';
-import { type Module, type Task, type Utils } from '@/models';
+import { type Config } from '@/models';
 
 import { GeneralSettings } from './GeneralSettings';
 import { ModulesSettings } from './ModulesSettings';
 import { TasksSettings } from './TasksSettings';
+import { UserSettings } from './UserSettings';
 
 interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  modules: Utils<Module>;
-  tasks: Utils<Task>;
+  config: Config;
   iniDate: Date;
   setIniDate: (date: Date) => void;
   endDate: Date;
   setEndDate: (date: Date) => void;
   defaultBadgeKey: string;
   setDefaultBadgeKey: (key: string) => void;
+  baseUrl?: string;
+  setBaseUrl: (url: string) => void;
 }
 
-type Section = 'general' | 'modules' | 'tasks';
+type Section = 'general' | 'modules' | 'tasks' | 'users';
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
   isOpen,
   onClose,
-  modules,
-  tasks,
+  config,
   iniDate,
   setIniDate,
   endDate,
   setEndDate,
   defaultBadgeKey,
-  setDefaultBadgeKey
+  setDefaultBadgeKey,
+  baseUrl,
+  setBaseUrl
 }) => {
   const [activeSection, setActiveSection] = useState<Section>('general');
   const [search, setSearch] = useState('');
+
+  const { allocations, members, tasks, modules } = config;
 
   if (!isOpen) return null;
 
@@ -66,6 +71,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   setActiveSection('general');
                 }}
                 icon={<SettingIcon className="h-5 w-5" />}
+              />
+              <SidebarItem
+                label="Users"
+                isActive={activeSection === 'users'}
+                onClick={() => {
+                  setActiveSection('users');
+                }}
+                icon={<PageIcon className="h-5 w-5" />}
               />
               <SidebarItem
                 label="Modules"
@@ -103,14 +116,21 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 setEndDate={setEndDate}
                 defaultBadgeKey={defaultBadgeKey}
                 setDefaultBadgeKey={setDefaultBadgeKey}
+                baseUrl={baseUrl}
+                setBaseUrl={setBaseUrl}
               />
             )}
+
+            {activeSection === 'users' && <UserSettings members={members} />}
 
             {activeSection === 'modules' && <ModulesSettings modules={modules} />}
 
             {activeSection === 'tasks' && (
               <TasksSettings
                 tasks={tasks}
+                allocations={allocations}
+                members={members}
+                modules={modules}
                 search={search}
                 setSearch={setSearch}
                 filteredTasks={filteredTasks}

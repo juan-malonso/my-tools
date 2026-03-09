@@ -10,10 +10,11 @@ interface ModulesSettingsProps {
 
 export const ModulesSettings: React.FC<ModulesSettingsProps> = ({ modules }) => {
   return (
-    <div className="space-y-6 max-w-3xl animate-in fade-in duration-300">
-      <div className="flex justify-between items-center mb-6">
+    <div className="space-y-6 animate-in fade-in duration-300">
+      <div className="flex justify-between items-center m-2">
         <h3 className="text-2xl font-semibold text-white">Module Management</h3>
         <CreateButton
+          size="sm"
           onClick={() => {
             modules.add({
               id: crypto.randomUUID(),
@@ -44,7 +45,7 @@ export const ModulesSettings: React.FC<ModulesSettingsProps> = ({ modules }) => 
 const ModuleRow: React.FC<{
   module: Module;
   setModule: (m: Module) => void;
-  delModule: (m: Module) => void;
+  delModule: (m: string) => void;
 }> = ({ module, setModule, delModule }) => {
   return (
     <div
@@ -82,7 +83,7 @@ const ModuleRow: React.FC<{
       />
       <DeleteButton
         onClick={() => {
-          delModule(module);
+          delModule(module.id);
         }}
       />
     </div>

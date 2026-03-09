@@ -9,6 +9,8 @@ interface GeneralSettingsProps {
   setEndDate: (date: Date) => void;
   defaultBadgeKey: string;
   setDefaultBadgeKey: (key: string) => void;
+  baseUrl?: string;
+  setBaseUrl: (url: string) => void;
 }
 
 export const GeneralSettings: React.FC<GeneralSettingsProps> = ({
@@ -17,7 +19,9 @@ export const GeneralSettings: React.FC<GeneralSettingsProps> = ({
   endDate,
   setEndDate,
   defaultBadgeKey,
-  setDefaultBadgeKey
+  setDefaultBadgeKey,
+  baseUrl,
+  setBaseUrl
 }) => {
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
@@ -65,6 +69,16 @@ export const GeneralSettings: React.FC<GeneralSettingsProps> = ({
                   value={defaultBadgeKey}
                   onChange={(e) => {
                     setDefaultBadgeKey(e.target.value);
+                  }}
+                />
+              </FormField>
+              <FormField label="Base URL">
+                <Input
+                  type="text"
+                  size="sm"
+                  value={baseUrl}
+                  onChange={(e) => {
+                    setBaseUrl(e.target.value);
                   }}
                 />
               </FormField>

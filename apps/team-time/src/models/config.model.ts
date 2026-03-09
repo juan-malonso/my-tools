@@ -7,7 +7,7 @@ export interface Utils<T> {
   values: T[];
   add: (item: T) => void;
   set: (item: T) => void;
-  del: (item: T) => void;
+  del: (id: string) => void;
   raw: (items: T[]) => void;
 }
 
@@ -16,6 +16,7 @@ export interface External {
     iniDate: string;
     endDate: string;
     defaultBadgeKey: string;
+    baseUrl?: string;
   };
 
   members: Member[];
@@ -30,6 +31,7 @@ export interface Config {
     iniDate: Date;
     endDate: Date;
     defaultBadgeKey: string;
+    baseUrl?: string;
   };
 
   members: Utils<Member>;
