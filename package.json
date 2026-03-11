@@ -4,6 +4,7 @@
     "apps/screen-wall",
     "apps/stint-analyzer",
     "apps/team-time",
+    "apps/vile-vote",
     "packages/components",
     "packages/layout"
   ],
