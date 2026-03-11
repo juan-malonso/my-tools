@@ -28,11 +28,14 @@ export const cellStyle = `'h-[${cellHSize.toFixed()}] w-[${CELL_W.toFixed()}px] 
 
 export function getDates(iniDate: Date, endDate: Date): ItemDate[] {
   const arr: ItemDate[] = [];
-  const current = new Date(iniDate);
-  while (current <= endDate) {
-    arr.push({ label: current.toISOString().split('T')[0], date: new Date(current) });
-    current.setDate(current.getDate() + 1);
+  const start = iniDate.getTime();
+  const end = endDate.getTime();
+
+  for (let d = start; d < end; d += 24 * 60 * 60 * 1000) {
+    const date = new Date(d);
+    arr.push({ label: date.toISOString().split('T')[0], date });
   }
+
   return arr;
 }
 
