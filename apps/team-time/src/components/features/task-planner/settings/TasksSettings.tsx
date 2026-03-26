@@ -2,6 +2,7 @@ import React from 'react';
 
 import { CreateButton, Input } from '@component/forms';
 
+import { PageIcon } from '@/components/common/icons';
 import { type Module, type Allocation, type Member, type Task, type Utils } from '@/models';
 
 import { AllocationSettings } from '../components/allocation/AllocationSettings';
@@ -39,7 +40,10 @@ export const TasksSettings: React.FC<TasksSettingsProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       <div className="flex justify-between items-center m-2">
-        <h3 className="text-2xl font-semibold text-white">Task Management</h3>
+        <h3 className="text-2xl font-semibold text-white flex items-center gap-3">
+          <PageIcon className="w-6 h-6 text-sky-500" />
+          Task Management
+        </h3>
         <div className="flex gap-2 items-center w-1/2 justify-end">
           <Input
             value={search}

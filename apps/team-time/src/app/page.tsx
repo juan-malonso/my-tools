@@ -65,21 +65,48 @@ export default function Page() {
     allocations: []
   });
 
-  const handleExport = () => {
-    const data = {
-      general: {
-        iniDate: config.general.iniDate.toISOString().slice(0, 10),
-        endDate: config.general.endDate.toISOString().slice(0, 10),
-        defaultBadgeKey: config.general.defaultBadgeKey,
-        baseUrl: config.general.baseUrl
-      },
-      members: config.members.values,
-      modules: config.modules.values,
-      tasks: config.tasks.values,
-      allocations: config.allocations.values
-    };
+  // --- Standard Import/Export Logic ---
 
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const applyExternalConfig = (data: External) => {
+    try {
+      setIniDate(new Date(data.general.iniDate));
+      setEndDate(new Date(data.general.endDate));
+      setDefaultBadgeKey(data.general.defaultBadgeKey);
+      setBaseUrl(data.general.baseUrl ?? '');
+      config.members.raw(data.members);
+      config.modules.raw(data.modules);
+      config.tasks.raw(data.tasks);
+      config.allocations.raw(data.allocations);
+    } catch (error) {
+      console.error('Error applying configuration:', error);
+      alert('There was an error applying the configuration.');
+    }
+  };
+
+  const createExportableConfig = (): string => {
+    return JSON.stringify(
+      {
+        general: {
+          iniDate: config.general.iniDate.toISOString().slice(0, 10),
+          endDate: config.general.endDate.toISOString().slice(0, 10),
+          defaultBadgeKey: config.general.defaultBadgeKey,
+          baseUrl: config.general.baseUrl
+        },
+        members: config.members.values,
+        modules: config.modules.values,
+        tasks: config.tasks.values,
+        allocations: config.allocations.values
+      },
+      null,
+      2
+    );
+  };
+
+  // --- Event Handlers ---
+
+  const handleExport = () => {
+    const data = createExportableConfig();
+    const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -91,26 +118,17 @@ export default function Page() {
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = (event) => {
-      try {
-        const data = JSON.parse(event.target?.result as string) as unknown as External;
-        setIniDate(new Date(data.general.iniDate));
-        setEndDate(new Date(data.general.endDate));
-        setDefaultBadgeKey(data.general.defaultBadgeKey);
-        setBaseUrl(data.general.baseUrl ?? '');
-        config.members.raw(data.members);
-        config.modules.raw(data.modules);
-        config.tasks.raw(data.tasks);
-        config.allocations.raw(data.allocations);
-      } catch (error) {
-        console.error('Error importing file', error);
-        alert('Error importing file');
-      }
+      applyExternalConfig(JSON.parse(event.target?.result as string) as External);
     };
     reader.readAsText(file);
-    e.target.value = '';
+    e.target.value = ''; // Reset input to allow re-uploading the same file
+  };
+
+  const handleConfigChange = (newConfig: Config) => {
+    // The object from remote is a parsed JSON, so its structure is 'External'.
+    applyExternalConfig(newConfig as unknown as External);
   };
 
   return (
@@ -157,6 +175,8 @@ export default function Page() {
           setIsSettingsOpen(false);
         }}
         config={config}
+        onConfigChange={handleConfigChange}
+        onConfigExport={createExportableConfig}
         iniDate={iniDate}
         setIniDate={setIniDate}
         endDate={endDate}

@@ -2,6 +2,7 @@ import React from 'react';
 
 import { ColorPicker, CreateButton, DeleteButton, Input } from '@packages/components';
 
+import { ModuleIcon } from '@/components/common/icons';
 import { type Module, type Utils } from '@/models';
 
 interface ModulesSettingsProps {
@@ -12,7 +13,10 @@ export const ModulesSettings: React.FC<ModulesSettingsProps> = ({ modules }) => 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       <div className="flex justify-between items-center m-2">
-        <h3 className="text-2xl font-semibold text-white">Module Management</h3>
+        <h3 className="text-2xl font-semibold text-white flex items-center gap-3">
+          <ModuleIcon className="w-6 h-6 text-sky-500" />
+          Module Management
+        </h3>
         <CreateButton
           size="sm"
           onClick={() => {

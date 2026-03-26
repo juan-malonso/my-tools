@@ -5,6 +5,7 @@ import { CreateButton, DeleteButton } from '@component/forms/buttons';
 import { ColorPicker } from '@component/forms/colors';
 import { Input } from '@component/forms/inputs';
 
+import { PageIcon } from '@/components/common/icons';
 import { type Member, type Utils } from '@/models';
 
 interface UserSettingsProps {
@@ -25,7 +26,10 @@ export const UserSettings: React.FC<UserSettingsProps> = ({ members }) => {
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       <div className="flex justify-between items-center m-2">
-        <h3 className="text-2xl font-semibold text-white">User Management</h3>
+        <h3 className="text-2xl font-semibold text-white flex items-center gap-3">
+          <PageIcon className="w-6 h-6 text-sky-500" />
+          User Management
+        </h3>
         <CreateButton size="sm" onClick={addMember}>
           Add Member
         </CreateButton>

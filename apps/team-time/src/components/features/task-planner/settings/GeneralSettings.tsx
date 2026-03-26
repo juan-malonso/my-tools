@@ -2,6 +2,8 @@ import React from 'react';
 
 import { FormField, Input } from '@component/forms';
 
+import { SettingIcon } from '@/components/common/icons';
+
 interface GeneralSettingsProps {
   iniDate: Date;
   setIniDate: (date: Date) => void;
@@ -26,7 +28,10 @@ export const GeneralSettings: React.FC<GeneralSettingsProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       <div className="flex justify-between items-center m-2">
-        <h3 className="text-2xl font-semibold text-white">General Settings</h3>
+        <h3 className="text-2xl font-semibold text-white flex items-center gap-3">
+          <SettingIcon className="w-6 h-6 text-sky-500" />
+          General Settings
+        </h3>
       </div>
       <hr className="border-slate-600" />
       <div className="flex flex-col gap-8">

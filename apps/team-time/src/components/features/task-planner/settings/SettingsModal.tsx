@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 import { CloseButton } from '@component/forms';
 import { Modal } from '@component/surfaces';
 
-import { ModuleIcon, PageIcon, SettingIcon } from '@/components/common/icons';
+import { ModuleIcon, PageIcon, SettingIcon, CloudIcon } from '@/components/common/icons';
 import { type Config } from '@/models';
 
 import { GeneralSettings } from './GeneralSettings';
 import { ModulesSettings } from './ModulesSettings';
+import { RemoteSettings } from './RemoteSettings';
 import { TasksSettings } from './TasksSettings';
 import { UserSettings } from './UserSettings';
 
@@ -15,6 +16,8 @@ interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
   config: Config;
+  onConfigChange: (newConfig: Config) => void;
+  onConfigExport: () => string;
   iniDate: Date;
   setIniDate: (date: Date) => void;
   endDate: Date;
@@ -25,12 +28,14 @@ interface SettingsModalProps {
   setBaseUrl: (url: string) => void;
 }
 
-type Section = 'general' | 'modules' | 'tasks' | 'users';
+type Section = 'general' | 'modules' | 'tasks' | 'users' | 'remote';
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
   isOpen,
   onClose,
   config,
+  onConfigChange,
+  onConfigExport,
   iniDate,
   setIniDate,
   endDate,
@@ -96,6 +101,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 }}
                 icon={<PageIcon className="h-5 w-5" />}
               />
+              <SidebarItem
+                label="Remote"
+                isActive={activeSection === 'remote'}
+                onClick={() => {
+                  setActiveSection('remote');
+                }}
+                icon={<CloudIcon className="h-5 w-5" />}
+              />
             </nav>
           </div>
         }
@@ -136,6 +149,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 filteredTasks={filteredTasks}
                 defaultBadgeKey={defaultBadgeKey}
               />
+            )}
+
+            {activeSection === 'remote' && (
+              <RemoteSettings onConfigChange={onConfigChange} onConfigExport={onConfigExport} />
             )}
           </div>
         }
