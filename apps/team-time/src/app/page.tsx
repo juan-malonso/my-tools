@@ -43,8 +43,10 @@ export default function Page() {
   const [endDate, setEndDate] = useState<Date>(getDate(date, 'month', 2));
   const [defaultBadgeKey, setDefaultBadgeKey] = useState<string>('TSK-001');
   const [baseUrl, setBaseUrl] = useState<string>('');
+  const [version, setVersion] = useState<number>(1);
 
   const config = useConfig({
+    version,
     general: {
       iniDate: iniDate.toISOString().slice(0, 10),
       endDate: endDate.toISOString().slice(0, 10),
@@ -73,6 +75,7 @@ export default function Page() {
       setEndDate(new Date(data.general.endDate));
       setDefaultBadgeKey(data.general.defaultBadgeKey);
       setBaseUrl(data.general.baseUrl ?? '');
+      setVersion(data.version || 1);
       config.members.raw(data.members);
       config.modules.raw(data.modules);
       config.tasks.raw(data.tasks);
@@ -83,9 +86,11 @@ export default function Page() {
     }
   };
 
-  const createExportableConfig = (): string => {
+  const createExportableConfig = (exportVersion?: number): string => {
+    const v = exportVersion ?? version;
     return JSON.stringify(
       {
+        version: v,
         general: {
           iniDate: config.general.iniDate.toISOString().slice(0, 10),
           endDate: config.general.endDate.toISOString().slice(0, 10),
@@ -105,7 +110,9 @@ export default function Page() {
   // --- Event Handlers ---
 
   const handleExport = () => {
-    const data = createExportableConfig();
+    const newVersion = version + 1;
+    setVersion(newVersion);
+    const data = createExportableConfig(newVersion);
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -129,6 +136,12 @@ export default function Page() {
   const handleConfigChange = (newConfig: Config) => {
     // The object from remote is a parsed JSON, so its structure is 'External'.
     applyExternalConfig(newConfig as unknown as External);
+  };
+
+  const handleConfigExport = () => {
+    const newVersion = version + 1;
+    setVersion(newVersion);
+    return { payload: createExportableConfig(newVersion), version: newVersion };
   };
 
   return (
@@ -174,9 +187,11 @@ export default function Page() {
         onClose={() => {
           setIsSettingsOpen(false);
         }}
+        version={version}
+        setVersion={setVersion}
         config={config}
         onConfigChange={handleConfigChange}
-        onConfigExport={createExportableConfig}
+        onConfigExport={handleConfigExport}
         iniDate={iniDate}
         setIniDate={setIniDate}
         endDate={endDate}

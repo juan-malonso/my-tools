@@ -9,6 +9,7 @@ interface CloudflareEnv {
 
 interface FileRow {
   content: string;
+  version?: number;
 }
 
 function getDB(): D1Database {
@@ -52,9 +53,10 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const body = (await request.json()) as { id?: unknown; text?: unknown };
-    const id = typeof body.id === 'string' ? body.id : null;
-    const text = typeof body.text === 'string' ? body.text : null;
+    const body = (await request.json()) as { id?: string; text?: string };
+    const id = body.id;
+    const text = body.text;
+    const incomingVersion = parseInt(request.headers.get('X-Config-Version') ?? '1', 10);
 
     if (!id || !text) {
       return NextResponse.json({ error: 'Invalid or missing id/text' }, { status: 400 });
@@ -62,11 +64,23 @@ export async function PUT(request: NextRequest) {
 
     const db = getDB();
 
+    // Validar versión para evitar sobreescritura (409 Conflict)
+    const existing = await db
+      .prepare('SELECT version FROM files WHERE id = ?')
+      .bind(id)
+      .first<FileRow>();
+    if (existing && typeof existing.version === 'number' && existing.version >= incomingVersion) {
+      return NextResponse.json(
+        { error: 'Version conflict.', remoteVersion: existing.version },
+        { status: 409 }
+      );
+    }
+
     const { results } = await db
       .prepare(
-        'UPDATE files SET content = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? RETURNING id'
+        'UPDATE files SET content = ?, version = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? RETURNING id'
       )
-      .bind(text, id)
+      .bind(text, incomingVersion, id)
       .all();
 
     if (results.length === 0) {

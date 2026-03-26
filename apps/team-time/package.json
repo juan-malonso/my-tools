@@ -6,7 +6,7 @@
     "build": "NEXT_PRIVATE_STANDALONE=true next build --webpack",
     "deploy": "wrangler deploy",
     "deploy:build": "yarn build && yarn postbuild && wrangler deploy",
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "lint": "eslint .",
     "postbuild": "opennextjs-cloudflare build -s",
     "start": "wrangler dev --remote",

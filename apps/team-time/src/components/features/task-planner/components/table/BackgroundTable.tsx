@@ -163,11 +163,11 @@ const DayBox: React.FC<{ date: ItemDate }> = ({ date }) => {
       style={{ height: DATE_H }}
       className={`bg-slate-700 ${headerStyle} ${borderStyle} ${color} border-b-2 text-sm`}
     >
-      <div className={`flex flex-col justify-center items-center text-lg`}>
-        <div className="text-slate-400">
-          {date.date.toLocaleString('en-US', { weekday: 'narrow' })}
+      <div className={`flex justify-center items-center gap-2`}>
+        <div className="text-lg">{date.label.slice(8, 10)}</div>
+        <div className="text-slate-400 text-md">
+          {date.date.toLocaleString('en-US', { weekday: 'short' }).toUpperCase()}
         </div>
-        <div className="">{date.label.slice(8, 10)}</div>
       </div>
     </th>
   );

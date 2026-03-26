@@ -1,6 +1,6 @@
 import type { Allocation } from '@/models';
 
-export const DATE_H = 70;
+export const DATE_H = 40;
 export interface ItemDate {
   label: string;
   date: Date;

@@ -6,8 +6,10 @@ import { CloudIcon } from '@/components/common/icons'; // Ajusta según tu estru
 import { type Config } from '@/models';
 
 interface RemoteSettingsProps {
+  version: number;
+  setVersion: (version: number) => void;
   onConfigChange: (newConfig: Config) => void;
-  onConfigExport: () => string;
+  onConfigExport: () => { payload: string; version: number };
 }
 
 // --- Cryptography Helper Functions (Compatibles con Node.js) ---
@@ -93,6 +95,8 @@ async function decrypt(encryptedData: string, key: CryptoKey): Promise<string> {
 }
 
 export const RemoteSettings: React.FC<RemoteSettingsProps> = ({
+  version,
+  setVersion,
   onConfigChange,
   onConfigExport
 }) => {
@@ -105,11 +109,16 @@ export const RemoteSettings: React.FC<RemoteSettingsProps> = ({
 
   const performUpload = async (key: CryptoKey) => {
     const hmacId = await deriveDeterministicId(username, key);
-    const encryptedText = await encrypt(onConfigExport(), key);
+    const previousVersion = version;
+    const { payload, version: exportedVersion } = onConfigExport();
+    const encryptedText = await encrypt(payload, key);
 
     const response = await fetch('/api/remote', {
-      method: 'PUT',
-      headers: { ['Content-Type']: 'application/json' },
+      method: 'POST',
+      headers: {
+        ['Content-Type']: 'application/json',
+        ['X-Config-Version']: exportedVersion.toString()
+      },
       body: JSON.stringify({
         id: hmacId,
         text: encryptedText
@@ -119,8 +128,15 @@ export const RemoteSettings: React.FC<RemoteSettingsProps> = ({
     if (response.ok) {
       setSuccess('Configuration uploaded successfully!');
     } else {
-      const errorData = (await response.json()) as { error?: string };
-      setError(`Upload failed: ${errorData.error ?? response.statusText}`);
+      setVersion(previousVersion); // Revert optimistic update
+      const errorData = (await response.json()) as { error?: string; remoteVersion?: number };
+      if (response.status === 409 && errorData.remoteVersion !== undefined) {
+        setError(
+          `Conflict: The currently saved version (v${errorData.remoteVersion.toString()}) is higher than your current version (v${previousVersion.toString()}). It is recommended to export as JSON and perform a merge.`
+        );
+      } else {
+        setError(`Upload failed: ${errorData.error ?? response.statusText}`);
+      }
     }
   };
 
@@ -180,7 +196,12 @@ export const RemoteSettings: React.FC<RemoteSettingsProps> = ({
       <div className="flex flex-col gap-8">
         <div className="flex flex-col gap-2 bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
           <div className="space-y-2">
-            <h3 className="text-lg text-slate-300">Credentials</h3>
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg text-slate-300">Credentials</h3>
+              <span className="px-2.5 py-0.5 text-xs font-mono font-medium bg-sky-900/30 text-sky-400 rounded-full border border-sky-800/50">
+                current v{version.toString()}
+              </span>
+            </div>
             <CredentialsForm
               username={username}
               setUsername={setUsername}

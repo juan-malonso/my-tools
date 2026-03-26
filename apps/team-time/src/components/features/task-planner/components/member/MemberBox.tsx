@@ -1,5 +1,4 @@
 import React, { type ChangeEvent } from 'react';
-import { DeleteButton } from '@component/forms';
 
 import { ColorPicker } from '@component/forms/colors';
 import { Input } from '@component/forms/inputs';
@@ -11,8 +10,7 @@ import { CELL_H, USER_W } from '../../utils/handlers';
 export const MemberBox: React.FC<{
   member: Member;
   setMember: (member: Member) => void;
-  onDelete?: () => void;
-}> = ({ member, setMember, onDelete }) => {
+}> = ({ member, setMember }) => {
   return (
     <td className="">
       <div style={{ height: CELL_H, width: USER_W }} className="h-full w-full p-1">
@@ -59,11 +57,6 @@ export const MemberBox: React.FC<{
               }}
             />
           </div>
-          {onDelete && (
-            <div className="absolute hidden top-1 right-1 group-hover:block">
-              <DeleteButton onClick={onDelete} />
-            </div>
-          )}
         </div>
       </div>
     </td>

@@ -12,6 +12,8 @@ export interface Utils<T> {
 }
 
 export interface External {
+  version: number;
+
   general: {
     iniDate: string;
     endDate: string;

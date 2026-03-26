@@ -15,9 +15,11 @@ import { UserSettings } from './UserSettings';
 interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  version: number;
+  setVersion: (version: number) => void;
   config: Config;
   onConfigChange: (newConfig: Config) => void;
-  onConfigExport: () => string;
+  onConfigExport: () => { payload: string; version: number };
   iniDate: Date;
   setIniDate: (date: Date) => void;
   endDate: Date;
@@ -33,6 +35,8 @@ type Section = 'general' | 'modules' | 'tasks' | 'users' | 'remote';
 export const SettingsModal: React.FC<SettingsModalProps> = ({
   isOpen,
   onClose,
+  version,
+  setVersion,
   config,
   onConfigChange,
   onConfigExport,
@@ -152,7 +156,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             )}
 
             {activeSection === 'remote' && (
-              <RemoteSettings onConfigChange={onConfigChange} onConfigExport={onConfigExport} />
+              <RemoteSettings
+                version={version}
+                setVersion={setVersion}
+                onConfigChange={onConfigChange}
+                onConfigExport={onConfigExport}
+              />
             )}
           </div>
         }

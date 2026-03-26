@@ -67,20 +67,7 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
                 className={`divide-x-2 w-full border-b-2 border-slate-500`}
                 style={{ height: CELL_H, width: CELL_W * dates.length }}
               >
-                <MemberBox
-                  key={i}
-                  member={member}
-                  setMember={members.set}
-                  onDelete={() => {
-                    members.del(member.id);
-                    const memberAllocations = allocations.values.filter(
-                      (a) => a.memberId === member.id
-                    );
-                    for (const allocation of memberAllocations) {
-                      allocations.del(allocation.id);
-                    }
-                  }}
-                />
+                <MemberBox key={i} member={member} setMember={members.set} />
 
                 {dates.map((date, j) => {
                   const allocation = memberTasks.find(
