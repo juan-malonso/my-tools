@@ -9,10 +9,11 @@ import { CELL_W, DATE_H, getDates, MONTH_H, USER_W, WEEK_H } from './utils/handl
 
 interface TaskPlannerProps {
   config: Config;
+  imports: number;
 }
 
-export const TaskPlanner: React.FC<TaskPlannerProps> = ({ config }) => {
-  const head = MONTH_H + WEEK_H + DATE_H + 11;
+export const TaskPlanner: React.FC<TaskPlannerProps> = ({ config, imports }) => {
+  const head = MONTH_H + WEEK_H + DATE_H + 13;
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,7 +34,8 @@ export const TaskPlanner: React.FC<TaskPlannerProps> = ({ config }) => {
       const maxScrollLeft = container.scrollWidth - containerWidth;
       container.scrollLeft = Math.max(0, Math.min(scrollLeft, maxScrollLeft));
     }
-  }, [config]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imports]);
 
   const [scrollAmount, setScrollAmount] = useState(0);
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -47,19 +49,19 @@ export const TaskPlanner: React.FC<TaskPlannerProps> = ({ config }) => {
       onScroll={handleScroll}
     >
       <div className="h-full w-max min-w-full relative">
-        <div className="h-full w-full absolute inset-0 z-0 pointer-events-none">
+        <div className="h-full w-full absolute inset-0">
           <BackgroundTable config={config} />
         </div>
 
         <div
-          className="absolute left-0 z-10 flex flex-row w-max min-w-full overflow-y-auto overflow-x-hidden"
+          className="absolute left-0 flex flex-row w-max min-w-full overflow-y-auto overflow-x-hidden"
           style={{ top: head, height: `calc(100% - ${head.toString()}px)` }}
         >
           <div
-            className="relative"
+            className="relative z-10"
             style={{
               width: USER_W,
-              transform: `translateX(${Math.max(0, scrollAmount - 21).toString()}px)`,
+              transform: `translateX(${Math.max(0, scrollAmount - 20).toString()}px)`,
               transition: 'transform 0s'
             }}
           >

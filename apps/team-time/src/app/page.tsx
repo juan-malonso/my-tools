@@ -67,8 +67,7 @@ export default function Page() {
     allocations: []
   });
 
-  // --- Standard Import/Export Logic ---
-
+  const [imports, setImports] = useState(0);
   const applyExternalConfig = (data: External) => {
     try {
       setIniDate(new Date(data.general.iniDate));
@@ -80,6 +79,7 @@ export default function Page() {
       config.modules.raw(data.modules);
       config.tasks.raw(data.tasks);
       config.allocations.raw(data.allocations);
+      setImports((prev) => prev + 1);
     } catch (error) {
       console.error('Error applying configuration:', error);
       alert('There was an error applying the configuration.');
@@ -181,7 +181,7 @@ export default function Page() {
         </div>
       }
     >
-      <TaskPlanner config={config} />
+      <TaskPlanner config={config} imports={imports} />
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => {

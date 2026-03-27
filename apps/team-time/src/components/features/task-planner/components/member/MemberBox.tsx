@@ -24,10 +24,9 @@ export const MemberBox: React.FC<{
           className={`
             h-full w-full p-1
             border border-slate-300/50 rounded-lg
-            bg-slate-800 text-white
+            bg-slate-900 text-white
             flex relative group overflow-hidden`}
         >
-          {/* Contenedor del ColorPicker (Siempre visible) */}
           <div className="h-full p-2 flex flex-col justify-center min-w-[48px]">
             <ColorPicker
               shape="circle"
@@ -47,7 +46,6 @@ export const MemberBox: React.FC<{
             </ColorPicker>
           </div>
 
-          {/* Contenedor de Inputs (Se colapsa si isStuck es true) */}
           <div
             className={`
               h-full flex flex-col justify-center gap-2 whitespace-nowrap
