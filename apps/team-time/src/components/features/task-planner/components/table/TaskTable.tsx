@@ -6,7 +6,6 @@ import { type CellMetadata, DateCell, type Over } from './DateCell';
 import { useDrag } from '../../hooks/useDrag';
 import { useResize } from '../../hooks/useResize';
 import { getDates, type ItemDate, CELL_H, CELL_W } from '../../utils/handlers';
-import { MemberBox } from '../member/MemberBox';
 import { TaskEdit } from '../task/TaskEdit';
 
 interface TaskTableProps {
@@ -67,8 +66,6 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
                 className={`divide-x-2 w-full border-b-2 border-slate-500`}
                 style={{ height: CELL_H, width: CELL_W * dates.length }}
               >
-                <MemberBox key={i} member={member} setMember={members.set} />
-
                 {dates.map((date, j) => {
                   const allocation = memberTasks.find(
                     (a) => dragged?.id !== a.id && a.iniDate === date.label

@@ -10,22 +10,29 @@ import { CELL_H, USER_W } from '../../utils/handlers';
 export const MemberBox: React.FC<{
   member: Member;
   setMember: (member: Member) => void;
-}> = ({ member, setMember }) => {
+  scrollAmount: number;
+}> = ({ member, setMember, scrollAmount }) => {
+  const currentWidth = Math.min(Math.max(64, 22 + USER_W - scrollAmount), USER_W);
+
   return (
-    <td className="">
-      <div style={{ height: CELL_H, width: USER_W }} className="h-full w-full p-1">
+    <td className="sticky left-[-22px] z-50">
+      <div
+        style={{ height: CELL_H, width: currentWidth }}
+        className="h-full p-1 transition-all duration-300 ease-in-out"
+      >
         <div
           className={`
             h-full w-full p-1
             border border-slate-300/50 rounded-lg
             bg-slate-800 text-white
-            flex relative group`}
+            flex relative group overflow-hidden`}
         >
-          <div className="h-full p-2 flex flex-col justify-center">
+          {/* Contenedor del ColorPicker (Siempre visible) */}
+          <div className="h-full p-2 flex flex-col justify-center min-w-[48px]">
             <ColorPicker
               shape="circle"
               size="lg"
-              className="border border-slate-500/50 rounded-full"
+              className="border border-slate-500/50 rounded-full shrink-0"
               value={member.color}
               onChange={(color) => {
                 setMember({ ...member, color });
@@ -39,9 +46,17 @@ export const MemberBox: React.FC<{
               </span>
             </ColorPicker>
           </div>
-          <div className="h-full w-full p-2 flex flex-col justify-center gap-2">
+
+          {/* Contenedor de Inputs (Se colapsa si isStuck es true) */}
+          <div
+            className={`
+              h-full flex flex-col justify-center gap-2 whitespace-nowrap
+              transition-all  ease-in-out
+              ${currentWidth < USER_W ? 'w-0 opacity-0 translate-x-[-10px]' : 'w-full opacity-100 translate-x-0'}
+            `}
+          >
             <Input
-              className="w-full text-lg"
+              className="w-full text-lg bg-transparent border-none focus:ring-0 px-2"
               value={member.name}
               placeholder="Name"
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +64,7 @@ export const MemberBox: React.FC<{
               }}
             />
             <Input
-              className="w-full text-sm"
+              className="w-full text-sm bg-transparent border-none focus:ring-0 px-2"
               value={member.title}
               placeholder="Title"
               onChange={(e: ChangeEvent<HTMLInputElement>) => {

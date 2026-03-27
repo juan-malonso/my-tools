@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import type { Config } from '@/models';
 
 import { BackgroundTable } from './components/table/BackgroundTable';
+import { MemberTable } from './components/table/MemberTable';
 import { TaskTable } from './components/table/TaskTable';
 import { CELL_W, DATE_H, getDates, MONTH_H, USER_W, WEEK_H } from './utils/handlers';
 
@@ -34,20 +35,40 @@ export const TaskPlanner: React.FC<TaskPlannerProps> = ({ config }) => {
     }
   }, [config]);
 
+  const [scrollAmount, setScrollAmount] = useState(0);
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    setScrollAmount(e.currentTarget.scrollLeft);
+  };
+
   return (
-    <div ref={scrollContainerRef} className="h-full w-full p-5 overflow-auto bg-slate-800">
-      <div className="h-full relative">
-        <div className="h-full absolute">
+    <div
+      ref={scrollContainerRef}
+      className="h-full w-full p-5 overflow-x-auto overflow-y-hidden bg-slate-800"
+      onScroll={handleScroll}
+    >
+      <div className="h-full w-max min-w-full relative">
+        <div className="h-full w-full absolute inset-0 z-0 pointer-events-none">
           <BackgroundTable config={config} />
         </div>
+
         <div
-          className="h-full absolute overflow-y-auto"
-          style={{
-            top: head,
-            height: `calc(100% - ${head.toFixed()}px)`
-          }}
+          className="absolute left-0 z-10 flex flex-row w-max min-w-full overflow-y-auto overflow-x-hidden"
+          style={{ top: head, height: `calc(100% - ${head.toString()}px)` }}
         >
-          <TaskTable config={config} />
+          <div
+            className="relative"
+            style={{
+              width: USER_W,
+              transform: `translateX(${Math.max(0, scrollAmount - 21).toString()}px)`,
+              transition: 'transform 0s'
+            }}
+          >
+            <MemberTable config={config} scrollAmount={scrollAmount} />
+          </div>
+
+          <div className="relative flex-1">
+            <TaskTable config={config} />
+          </div>
         </div>
       </div>
     </div>
