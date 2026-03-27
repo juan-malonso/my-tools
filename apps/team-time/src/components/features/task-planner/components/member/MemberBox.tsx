@@ -24,7 +24,8 @@ export const MemberBox: React.FC<{
           className={`
             h-full w-full p-1
             border border-slate-300/50 rounded-lg
-            bg-slate-900 text-white
+            bg-slate-800 text-white
+            shadow-lg shadow-slate-900
             flex relative group overflow-hidden`}
         >
           <div className="h-full p-2 flex flex-col justify-center min-w-[48px]">
