@@ -2,7 +2,7 @@ import { useState, type DragEvent } from 'react';
 
 import type { Allocation, Utils } from '@/models';
 
-import { isCellOccupied, type ItemDate } from '../utils/handlers';
+import { checkIsCellOccupied, type ItemDate } from '../utils';
 
 export function useDrag(
   dates: ItemDate[],
@@ -26,7 +26,7 @@ export function useDrag(
       if (!allocation) return;
 
       const newAllocation = { ...allocation, memberId, iniDate };
-      if (isCellOccupied(dates, allocations.values, newAllocation)) {
+      if (checkIsCellOccupied(dates, allocations.values, newAllocation)) {
         setDragged(undefined);
         return;
       }

@@ -2,10 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import type { Config } from '@/models';
 
-import { BackgroundTable } from './components/table/BackgroundTable';
-import { MemberTable } from './components/table/MemberTable';
-import { TaskTable } from './components/table/TaskTable';
-import { CELL_W, DATE_H, getDates, MONTH_H, USER_W, WEEK_H } from './utils/handlers';
+import { BackgroundTable, MemberTable, TaskTable } from './components/table';
+import { CELL_W, DATE_H, getDates, MONTH_H, USER_W, WEEK_H } from './utils';
 
 interface TaskPlannerProps {
   config: Config;
@@ -45,7 +43,7 @@ export const TaskPlanner: React.FC<TaskPlannerProps> = ({ config, imports }) => 
   return (
     <div
       ref={scrollContainerRef}
-      className="h-full w-full p-5 overflow-x-auto overflow-y-hidden bg-slate-800"
+      className="h-full w-full p-3 overflow-x-auto overflow-y-hidden bg-slate-800"
       onScroll={handleScroll}
     >
       <div className="h-full w-max min-w-full relative">
@@ -61,7 +59,7 @@ export const TaskPlanner: React.FC<TaskPlannerProps> = ({ config, imports }) => 
             className="relative z-10"
             style={{
               width: USER_W,
-              transform: `translateX(${Math.max(0, scrollAmount - 20).toString()}px)`,
+              transform: `translateX(${Math.max(0, scrollAmount - 13).toString()}px)`,
               transition: 'transform 0s'
             }}
           >

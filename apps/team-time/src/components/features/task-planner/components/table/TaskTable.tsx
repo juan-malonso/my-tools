@@ -5,8 +5,8 @@ import type { Allocation, Config, Task } from '@/models';
 import { type CellMetadata, DateCell, type Over } from './DateCell';
 import { useDrag } from '../../hooks/useDrag';
 import { useResize } from '../../hooks/useResize';
-import { getDates, type ItemDate, CELL_H, CELL_W } from '../../utils/handlers';
-import { TaskEdit } from '../task/TaskEdit';
+import { getDates, type ItemDate, CELL_H, CELL_W } from '../../utils';
+import { TaskEdit } from '../task';
 
 interface TaskTableProps {
   config: Config;

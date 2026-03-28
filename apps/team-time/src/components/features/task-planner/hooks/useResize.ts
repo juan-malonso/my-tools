@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 import type { Allocation, Utils } from '@/models';
 
-import { isCellOccupied, type ItemDate, CELL_W } from '../utils/handlers';
+import { checkIsCellOccupied, type ItemDate, CELL_W } from '../utils';
 
 export interface Resize {
   allocationId: string;
@@ -30,7 +30,7 @@ export function useResize(
       if (span < 1 || init < 0 || init + span > dates.length) return;
 
       const newAllocation = { ...allocation, span, iniDate: dates[init].label };
-      if (isCellOccupied(dates, allocations.values, newAllocation)) return;
+      if (checkIsCellOccupied(dates, allocations.values, newAllocation)) return;
 
       allocations.set(newAllocation);
     };
@@ -41,7 +41,7 @@ export function useResize(
       if (span < 1 || resizing.initialDateIndex + span > dates.length) return;
 
       const newAllocation = { ...allocation, span };
-      if (isCellOccupied(dates, allocations.values, newAllocation)) return;
+      if (checkIsCellOccupied(dates, allocations.values, newAllocation)) return;
 
       allocations.set(newAllocation);
     };

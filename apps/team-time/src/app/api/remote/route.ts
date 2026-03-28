@@ -64,7 +64,7 @@ export async function PUT(request: NextRequest) {
 
     const db = getDB();
 
-    // Validar versión para evitar sobreescritura (409 Conflict)
+    // Validate version to prevent overwriting (409 Conflict)
     const existing = await db
       .prepare('SELECT version FROM files WHERE id = ?')
       .bind(id)

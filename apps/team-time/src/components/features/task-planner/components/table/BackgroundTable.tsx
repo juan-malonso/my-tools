@@ -8,7 +8,7 @@ import type { Config } from '@/models';
 import {
   getDates,
   getWeeks,
-  getMonth,
+  getMonths,
   DATE_H,
   WEEK_H,
   MONTH_H,
@@ -16,9 +16,10 @@ import {
   type ItemMonth,
   type ItemWeek,
   USER_W,
-  type ItemDate
-} from '../../utils/handlers';
-import { ReportModal, generateWeeklyReport } from '../report';
+  type ItemDate,
+  generateWeeklyReport
+} from '../../utils';
+import { ReportModal } from '../report';
 
 interface BackgroundTableProps {
   config: Config;
@@ -31,14 +32,22 @@ export const BackgroundTable: React.FC<BackgroundTableProps> = ({ config }) => {
   const { general, members, allocations, tasks, modules } = config;
 
   const dates = getDates(general.iniDate, general.endDate);
-  const months = getMonth(dates);
+  const months = getMonths(dates);
   const weeks = getWeeks(dates);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [reportText, setReportText] = useState('');
+  const [currentWeekIndex, setCurrentWeekIndex] = useState<number | null>(null);
 
-  const handleReport = (weekDates: ItemDate[]) => {
-    const text = generateWeeklyReport({
+  const handleReport = (weekIndex: number) => {
+    setCurrentWeekIndex(weekIndex);
+  };
+
+  let reportText = '';
+  if (currentWeekIndex !== null && currentWeekIndex >= 0 && currentWeekIndex < weeks.length) {
+    const weekInfo = weeks[currentWeekIndex];
+    const offset = weeks.slice(0, currentWeekIndex).reduce((sum, w) => sum + w.span, 0);
+    const weekDates = dates.slice(offset, offset + weekInfo.span);
+
+    reportText = generateWeeklyReport({
       weekDates,
       members: members.values,
       allocations: allocations.values,
@@ -46,8 +55,17 @@ export const BackgroundTable: React.FC<BackgroundTableProps> = ({ config }) => {
       modules: modules.values,
       baseUrl: general.baseUrl
     });
-    setReportText(text);
-    setIsModalOpen(true);
+  }
+
+  const handlePrevWeek = () => {
+    if (currentWeekIndex !== null && currentWeekIndex > 0) {
+      setCurrentWeekIndex(currentWeekIndex - 1);
+    }
+  };
+  const handleNextWeek = () => {
+    if (currentWeekIndex !== null && currentWeekIndex < weeks.length - 1) {
+      setCurrentWeekIndex(currentWeekIndex + 1);
+    }
   };
 
   return (
@@ -72,13 +90,12 @@ export const BackgroundTable: React.FC<BackgroundTableProps> = ({ config }) => {
             {
               weeks.reduce<{ nodes: React.ReactNode[]; offset: number }>(
                 (acc, w, i) => {
-                  const weekDates = dates.slice(acc.offset, acc.offset + w.span);
                   acc.nodes.push(
                     <WeekBox
                       key={i}
                       week={w}
                       onReport={() => {
-                        handleReport(weekDates);
+                        handleReport(i);
                       }}
                     />
                   );
@@ -105,7 +122,17 @@ export const BackgroundTable: React.FC<BackgroundTableProps> = ({ config }) => {
           </tr>
         </tbody>
       </table>
-      <ReportModal text={reportText} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <ReportModal
+        text={reportText}
+        isModalOpen={currentWeekIndex !== null}
+        setIsModalOpen={(isOpen) => {
+          if (!isOpen) setCurrentWeekIndex(null);
+        }}
+        onPrev={handlePrevWeek}
+        onNext={handleNextWeek}
+        canGoPrev={currentWeekIndex !== null && currentWeekIndex > 0}
+        canGoNext={currentWeekIndex !== null && currentWeekIndex < weeks.length - 1}
+      />
     </>
   );
 };

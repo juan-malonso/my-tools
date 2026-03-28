@@ -1,19 +1,20 @@
-import type { Resize } from '../../hooks/useResize';
+import type { Resize } from '../../hooks';
 
 import React, { type DragEvent } from 'react';
 
-import { DropBox } from '@/components/features/task-planner/components/dnd/DropBox';
 import type { Allocation, Member, Module, Task } from '@/models';
 
 import {
   handleDragEnter,
   handleDragOver,
   handleDropEvent,
-  onResize
-} from '../../utils/dnd-handlers';
-import { type ItemDate, CELL_H, CELL_W } from '../../utils/handlers';
-import { TaskPlaceholder } from '../task';
-import { TaskBox } from '../task';
+  handleResizeStart,
+  type ItemDate,
+  CELL_H,
+  CELL_W
+} from '../../utils';
+import { DropBox } from '../dnd';
+import { TaskPlaceholder, TaskBox } from '../task';
 
 export interface Over {
   memberId: string;
@@ -109,7 +110,7 @@ export const DateCell: React.FC<DateCellProps> = ({
               allocation={allocation}
               tasks={tasks}
               modules={modules}
-              onResize={onResize(allocation, index, setResizing)}
+              onResize={handleResizeStart(allocation, index, setResizing)}
               onDrag={handleDrag}
               updateAllocation={setAllocation}
               onDuplicate={onDuplicate}

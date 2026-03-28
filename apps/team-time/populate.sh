@@ -28,13 +28,13 @@ function encryptGCM(text, key) {
 }
 
 try {
-  // 1. Derivar clave maestra
+  // 1. Derive master key
   const masterKey = crypto.pbkdf2Sync(password, username, 100000, 32, 'sha256');
   
-  // 2. ID DETERMINÍSTICO (Para búsqueda en DB)
+  // 2. DETERMINISTIC ID (For DB lookup)
   const hmacId = crypto.createHmac('sha256', masterKey).update(username).digest('base64');
   
-  // 3. CONTENIDO ALEATORIO (Seguridad)
+  // 3. RANDOM CONTENT (Security)
   const encryptedText = encryptGCM(defaultData, masterKey);
   
   console.log(JSON.stringify({ hmacId, encryptedText }));

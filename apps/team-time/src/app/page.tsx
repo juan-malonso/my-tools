@@ -1,148 +1,34 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 
 import { BodyGrid } from '@packages/layout';
 import Script from 'next/script';
 
 import { PageIcon, SettingIcon } from '@/components/common/icons';
-import { SettingsModal, TaskPlanner } from '@/components/features/task-planner';
-import {
-  type Allocation,
-  type Member,
-  type Module,
-  type Task,
-  type Config,
-  type External,
-  type Utils
-} from '@/models';
-
-function getDate(date: Date, period: 'day' | 'week' | 'month', diff: number) {
-  const newDate = new Date(date);
-
-  switch (period) {
-    case 'day':
-      newDate.setDate(newDate.getDate() + diff);
-      break;
-    case 'week':
-      newDate.setDate(newDate.getDate() + diff * 7);
-      break;
-    case 'month':
-      newDate.setMonth(newDate.getMonth() + diff);
-      break;
-  }
-
-  return newDate;
-}
+import { SettingsModal, TaskPlanner, usePlannerState } from '@/components/features/task-planner';
 
 export default function Page() {
-  const date = new Date();
-
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [iniDate, setIniDate] = useState<Date>(getDate(date, 'day', -2));
-  const [endDate, setEndDate] = useState<Date>(getDate(date, 'month', 2));
-  const [defaultBadgeKey, setDefaultBadgeKey] = useState<string>('TSK-001');
-  const [baseUrl, setBaseUrl] = useState<string>('');
-  const [version, setVersion] = useState<number>(1);
-
-  const config = useConfig({
+  const {
+    isSettingsOpen,
+    setIsSettingsOpen,
+    iniDate,
+    setIniDate,
+    endDate,
+    setEndDate,
+    defaultBadgeKey,
+    setDefaultBadgeKey,
+    baseUrl,
+    setBaseUrl,
     version,
-    general: {
-      iniDate: iniDate.toISOString().slice(0, 10),
-      endDate: endDate.toISOString().slice(0, 10),
-      defaultBadgeKey,
-      baseUrl
-    },
-    members: [
-      {
-        id: '-',
-        name: '',
-        title: '',
-        color: '',
-        schedule: [8, 8, 8, 8, 8, 0, 0]
-      }
-    ],
-    modules: [],
-    tasks: [],
-    allocations: []
-  });
-
-  const [imports, setImports] = useState(0);
-  const applyExternalConfig = (data: External) => {
-    try {
-      setIniDate(new Date(data.general.iniDate));
-      setEndDate(new Date(data.general.endDate));
-      setDefaultBadgeKey(data.general.defaultBadgeKey);
-      setBaseUrl(data.general.baseUrl ?? '');
-      setVersion(data.version || 1);
-      config.members.raw(data.members);
-      config.modules.raw(data.modules);
-      config.tasks.raw(data.tasks);
-      config.allocations.raw(data.allocations);
-      setImports((prev) => prev + 1);
-    } catch (error) {
-      console.error('Error applying configuration:', error);
-      alert('There was an error applying the configuration.');
-    }
-  };
-
-  const createExportableConfig = (exportVersion?: number): string => {
-    const v = exportVersion ?? version;
-    return JSON.stringify(
-      {
-        version: v,
-        general: {
-          iniDate: config.general.iniDate.toISOString().slice(0, 10),
-          endDate: config.general.endDate.toISOString().slice(0, 10),
-          defaultBadgeKey: config.general.defaultBadgeKey,
-          baseUrl: config.general.baseUrl
-        },
-        members: config.members.values,
-        modules: config.modules.values,
-        tasks: config.tasks.values,
-        allocations: config.allocations.values
-      },
-      null,
-      2
-    );
-  };
-
-  // --- Event Handlers ---
-
-  const handleExport = () => {
-    const newVersion = version + 1;
-    setVersion(newVersion);
-    const data = createExportableConfig(newVersion);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'team-time-config.json';
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      applyExternalConfig(JSON.parse(event.target?.result as string) as External);
-    };
-    reader.readAsText(file);
-    e.target.value = ''; // Reset input to allow re-uploading the same file
-  };
-
-  const handleConfigChange = (newConfig: Config) => {
-    // The object from remote is a parsed JSON, so its structure is 'External'.
-    applyExternalConfig(newConfig as unknown as External);
-  };
-
-  const handleConfigExport = () => {
-    const newVersion = version + 1;
-    setVersion(newVersion);
-    return { payload: createExportableConfig(newVersion), version: newVersion };
-  };
+    setVersion,
+    imports,
+    config,
+    handleExport,
+    handleImport,
+    handleConfigChange,
+    handleConfigExport
+  } = usePlannerState();
 
   return (
     <BodyGrid
@@ -203,51 +89,4 @@ export default function Page() {
       />
     </BodyGrid>
   );
-}
-
-function useConfig(external: External) {
-  const members = useCustomState<Member>(external.members);
-  const modules = useCustomState<Module>(external.modules);
-  const tasks = useCustomState<Task>(external.tasks);
-
-  const allocations = useCustomState<Allocation>(external.allocations);
-
-  const config = useMemo<Config>(() => {
-    return {
-      general: {
-        iniDate: new Date(external.general.iniDate),
-        endDate: new Date(external.general.endDate),
-        defaultBadgeKey: external.general.defaultBadgeKey,
-        baseUrl: external.general.baseUrl ?? ''
-      },
-
-      members,
-      modules,
-      tasks,
-
-      allocations
-    };
-  }, [external.general, members, modules, tasks, allocations]);
-
-  return config;
-}
-
-function useCustomState<T extends { id: string }>(value: T[]): Utils<T> {
-  const [values, setValues] = useState<T[]>(value);
-
-  return {
-    values,
-    add: (value: T) => {
-      setValues([...values, value]);
-    },
-    set: (value: T) => {
-      setValues(values.map((m) => (m.id === value.id ? value : m)));
-    },
-    del: (id: string) => {
-      setValues(values.filter((m) => m.id !== id));
-    },
-    raw: (values: T[]) => {
-      setValues(values);
-    }
-  };
 }

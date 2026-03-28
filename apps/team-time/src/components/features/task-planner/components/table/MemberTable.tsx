@@ -2,8 +2,8 @@ import React from 'react';
 
 import type { Config } from '@/models';
 
-import { CELL_H } from '../../utils/handlers';
-import { MemberBox } from '../member/MemberBox';
+import { CELL_H } from '../../utils';
+import { MemberBox } from '../member';
 
 interface TaskTableProps {
   config: Config;

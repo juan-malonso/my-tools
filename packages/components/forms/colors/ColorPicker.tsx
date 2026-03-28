@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'; // Añadimos useRef
+import React, { useState, useRef } from 'react';
 
 import {
   useFloating,
@@ -110,19 +110,14 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   children
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const arrowRef = useRef(null); // Ref para el elemento de la flecha
+  const arrowRef = useRef(null);
 
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen,
     placement: 'right',
     whileElementsMounted: autoUpdate,
-    middleware: [
-      offset(GAP),
-      flip(),
-      shift({ padding: 10 }),
-      arrow({ element: arrowRef }) // 3. Configuramos el middleware
-    ]
+    middleware: [offset(GAP), flip(), shift({ padding: 10 }), arrow({ element: arrowRef })]
   });
 
   const click = useClick(context, { enabled: !disabled });
@@ -172,8 +167,8 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
               <FloatingArrow
                 ref={arrowRef}
                 context={context}
-                fill="#1e293b" // bg-slate-800
-                stroke="#cbd5e1" // border-slate-300
+                fill="#1e293b"
+                stroke="#cbd5e1"
                 strokeWidth={1}
                 height={ARROW_HEIGHT}
               />
