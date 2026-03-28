@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const AddIcon: React.FC<{ className?: string }> = ({ className }) => (
+export const AddIcon: React.FC<{ className: string }> = ({ className }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={className}

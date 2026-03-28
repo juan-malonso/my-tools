@@ -18,6 +18,7 @@
     "@floating-ui/react": "^0.27.19",
     "@packages/components": "workspace:*",
     "@packages/layout": "workspace:*",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "marked": "^17.0.4",
     "next": "16.1.6",
     "react": "19.2.3",

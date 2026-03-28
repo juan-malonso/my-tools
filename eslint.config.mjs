@@ -1,11 +1,11 @@
-// @ts-check
-
+import globals from 'globals';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import prettierConfig from 'eslint-config-prettier';
 import importPlugin from 'eslint-plugin-import';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -15,65 +15,69 @@ export default tseslint.config(
     plugins: {
       react,
       'react-hooks': reactHooks,
-      import: importPlugin
+      import: importPlugin,
+      '@typescript-eslint': tseslint.plugin,
+      'simple-import-sort': simpleImportSort
     },
     rules: {
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
       'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off',
+      'react/self-closing-comp': 'error',
 
-      // TypeScript Rules
+      // --- TYPESCRIPT BEST PRACTICES ---
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-misused-promises': 'error',
+      '@typescript-eslint/await-thenable': 'error',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/sort-type-constituents': 'error',
+
+      // --- IMPORT STRATEGY ---
+      'simple-import-sort/imports': [
+        'error',
+        {
+          groups: [
+            ['^react', '^@?\\w'], // Paquetes: React primero, luego externos
+            ['^@(/.*|$)'], // Internal aliases (como @/hooks)
+            ['^\\.\\.(?!/?$)', '^\\.\\./?$'], // Parent imports (../)
+            ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'], // Sibling imports (./)
+            ['^.+\\.s?css$'] // Archivos de estilo al final
+          ]
+        }
+      ],
+      'simple-import-sort/exports': 'error',
+      'import/first': 'error',
+      'import/newline-after-import': 'error',
+      'import/no-duplicates': 'error',
+
       '@typescript-eslint/consistent-type-imports': [
         'error',
-        {
-          prefer: 'type-imports',
-          fixStyle: 'inline-type-imports'
-        }
+        { prefer: 'type-imports', fixStyle: 'inline-type-imports' }
       ],
 
-      // Import Rules
-      'import/order': [
-        'error',
-        {
-          groups: ['type', 'builtin', 'external', 'internal', ['parent', 'sibling', 'index']],
-          pathGroups: [
-            {
-              pattern: 'react',
-              group: 'external',
-              position: 'before'
-            },
-            {
-              pattern: '@/**',
-              group: 'internal'
-            }
-          ],
-          pathGroupsExcludedImportTypes: ['react'],
-          'newlines-between': 'always',
-          alphabetize: {
-            order: 'asc',
-            caseInsensitive: true
-          }
-        }
-      ],
+      // --- CLEAN CODE & ESTRUCTURA ---
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'no-debugger': 'error',
+      curly: ['error', 'all'],
+      eqeqeq: ['error', 'always', { null: 'ignore' }],
+      'no-else-return': 'error',
 
-      // Complexity Rules
+      // --- COMPLEXITY & LIMITS ---
       complexity: ['error', 10],
       'max-depth': ['error', 3],
       'max-nested-callbacks': ['error', 3],
       'max-params': ['error', 5],
-
-      // Function Length
       'max-lines-per-function': ['error', 200],
 
-      // Naming Conventions
+      // --- NAMING CONVENTIONS ---
       '@typescript-eslint/naming-convention': [
         'error',
         {
           selector: 'variable',
-          filter: {
-            regex: '^(React)$',
-            match: true
-          },
+          filter: { regex: '^(React)$', match: true },
           format: ['PascalCase']
         },
         {
@@ -101,14 +105,18 @@ export default tseslint.config(
       ]
     },
     languageOptions: {
+      parser: tseslint.parser,
       parserOptions: {
         project: true,
         tsconfigRootDir: import.meta.dirname
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.node
       }
     }
   },
   prettierConfig,
-  // Ignores for the whole monorepo
   {
     ignores: [
       '**/dist/',

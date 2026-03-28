@@ -2,9 +2,10 @@ import { type D1Database } from '@cloudflare/workers-types';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { type NextRequest, NextResponse } from 'next/server';
 
+const TEAM_TIME_DB = 'TEAM_TIME_DB';
+
 interface CloudflareEnv {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  TEAM_TIME_DB: D1Database;
+  [TEAM_TIME_DB]: D1Database;
 }
 
 interface FileRow {
@@ -38,8 +39,6 @@ export async function GET(request: NextRequest) {
       .prepare('SELECT content FROM files WHERE id = ?')
       .bind(id)
       .first<FileRow>();
-
-    console.log('Database query result:', id);
 
     if (!result) {
       return NextResponse.json({ error: 'Record not found' }, { status: 404 });

@@ -1,12 +1,12 @@
 'use client';
 
-import React from 'react';
-
 import { BodyGrid } from '@packages/layout';
 import Script from 'next/script';
 
-import { PageIcon, SettingIcon } from '@/components/common/icons';
-import { SettingsModal, TaskPlanner, usePlannerState } from '@/components/features/task-planner';
+import { PageIcon, SettingIcon } from '@/components/icons';
+import { SettingsModal } from '@/components/settings';
+import { TaskPlanner } from '@/components/task-planner';
+import { usePlannerState } from '@/hooks/usePlannerState';
 
 export default function Page() {
   const {
@@ -38,7 +38,7 @@ export default function Page() {
       headerTitle={
         <div className="flex items-center justify-between w-full p-3">
           <div className="flex items-center gap-2">
-            <PageIcon />
+            <PageIcon className="w-6 h-6 text-sky-500" />
             <h1 className="text-xl font-bold tracking-tight">
               Team<span className="text-sky-500"> Time</span>
             </h1>
