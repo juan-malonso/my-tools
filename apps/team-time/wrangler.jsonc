@@ -17,7 +17,7 @@
     }
   },
 
-  "envs": {
+  "env": {
     "dev": {
       "assets": {
         "directory": ".open-next/assets",

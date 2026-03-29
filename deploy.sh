@@ -4,140 +4,180 @@
 set -e
 
 # --- Color Palette ---
-BANNER='\033[1;33m'     # Yellow Bold
-HEADER='\033[1;36m'     # Cyan Bold
-KEY='\033[0;97m'        # White
-VALUE_BLUE='\033[1;34m' # Blue Bold
-INPUT_L='\033[0;97m'    # White
-INPUT_R='\033[0;90m'    # Grey
-WARN='\033[1;33m'       # Yellow Bold
-ERROR='\033[1;31m'      # Red Bold
-NC='\033[0m'            # No Color
+BANNER_CLR='\033[1;33m'   # Yellow Bold
+HEADER_CLR='\033[1;36m'   # Cyan Bold
+KEY_CLR='\033[0;97m'      # White
+VAL_CLR='\033[1;34m'      # Blue Bold
+INPUT_R='\033[1;33m'      # Yellow Bold
+DEFAULT_R='\033[0;90m'    # Grey
+WARN_CLR='\033[1;33m'     # Yellow Bold
+ERR_CLR='\033[1;31m'      # Red Bold
+NC='\033[0m'              # No Color
 
-# Initial variables
+# --- UI Functions ---
+
+print_banner() {
+    echo -e "${BANNER_CLR}==============================================="
+    echo -e "  $1"
+    echo -e "===============================================${NC}"
+}
+
+print_step() {
+    echo -e "\n\n${HEADER_CLR}>> STEP [$1]: $2${NC}"
+}
+
+print_kv() {
+    echo -e "${KEY_CLR}   $1:${VAL_CLR} $2${NC}"
+}
+
+print_warn() {
+    echo -e "${WARN_CLR}$1${NC}"
+}
+
+print_error() {
+    echo -e "${ERR_CLR}Error: $1${NC}"
+    exit 1
+}
+
+prompt_input() {
+    local label=$1
+    local options=$2
+    local default=$3
+    local input_val
+
+    local prompt_text="${KEY_CLR}$label"
+    [ -n "$options" ] && prompt_text+="${INPUT_R} ($options)"
+    [ -n "$default" ] && prompt_text+="${DEFAULT_R} [default: $default]"
+    prompt_text+="${NC}: "
+
+    echo -ne "$prompt_text" >&2
+    read input_val
+    
+    if [ -z "$input_val" ]; then
+        echo "$default"
+    else
+        echo "$input_val"
+    fi
+}
+
+confirm_proceed() {
+    local message=$1
+    local default="y"
+    local response
+    
+    response=$(prompt_input "$message" "y/n" "$default")
+    response=$(echo "$response" | tr '[:upper:]' '[:lower:]')
+
+    if [[ "$response" == "y" || "$response" == "yes" ]]; then
+        return 0
+    else
+        echo -e "\n${ERR_CLR}✖ Operation aborted by user.${NC}"
+        exit 1
+    fi
+}
+
+show_summary() {
+    echo -e "\n${BANNER_CLR}--- DEPLOYMENT SUMMARY ----------------------${NC}"
+    print_kv "Worker " "$WORKER_NAME"
+    print_kv "Env    " "$ENV"
+    print_kv "Change " "$CHANGE"
+    print_kv "Version" "$VERSION"
+    echo -e "${BANNER_CLR}-----------------------------------------------${NC}"
+}
+
+# --- Logic ---
+
 WORKER_NAME=""
 ENV=""
 CHANGE=""
 
-# Function to display usage
-usage() {
-  echo -e "${WARN}Usage: $0 [-n <name>] [-e <env>] [-c <change>]${NC}"
-  echo "  -n: Worker name (Required)"
-  echo "  -e: Environment (dev|stg|uat|pro) [default: dev]"
-  echo "  -c: Change type (major|minor|patch|skip) [default: patch]"
-  exit 1
-}
-
-echo -e "${BANNER}==============================================="
-echo -e "==       WORKER DEPLOYMENT AUTOMATION        =="
-echo -e "===============================================${NC}"
+print_banner "WORKER DEPLOYMENT AUTOMATION"
 
 # 1. Parse flags
-echo -e "\n\n${HEADER}>> STEP [1/5]: PARSING ARGUMENTS${NC}"
+print_step "1/5" "PARSING ARGUMENTS"
 while getopts "n:e:c:h" opt; do
   case ${opt} in
-    n ) WORKER_NAME=$OPTARG; echo -e "${KEY}   Worker Name:${VALUE_BLUE} $WORKER_NAME${NC}" ;;
-    e ) ENV=$OPTARG; echo -e "${KEY}   Environment:${VALUE_BLUE} $ENV${NC}" ;;
-    c ) CHANGE=$OPTARG; echo -e "${KEY}   Change Type:${VALUE_BLUE} $CHANGE${NC}" ;;
-    h ) usage ;;
-    \? ) usage ;;
+    n ) WORKER_NAME=$OPTARG; print_kv "Worker Name" "$WORKER_NAME" ;;
+    e ) ENV=$OPTARG; print_kv "Environment" "$ENV" ;;
+    c ) CHANGE=$OPTARG; print_kv "Change Type" "$CHANGE" ;;
+    h | \? ) echo "Usage: $0 [-n name] [-e env] [-c change]"; exit 1 ;;
   esac
 done
 
-# 2. Validate and prompt for missing inputs
-echo -e "\n\n${HEADER}>> STEP [2/5]: CONFIGURATION & INPUTS${NC}"
+# 2. Config & Inputs
+print_step "2/5" "CONFIGURATION & INPUTS"
 
 if [ -z "$WORKER_NAME" ]; then
-  echo -ne "${INPUT_L}Enter worker name${NC}: "
-  read WORKER_NAME
-  [ -z "$WORKER_NAME" ] && { echo -e "${ERROR}Error: Name mandatory.${NC}"; exit 1; }
+    WORKER_NAME=$(prompt_input "Enter worker name" "" "")
+    [ -z "$WORKER_NAME" ] && print_error "Name is mandatory."
 fi
 
 if [ -z "$ENV" ]; then
-  echo -ne "${INPUT_L}Select environment ${INPUT_R}(dev|stg|uat|pro) [dev]${INPUT_L}:${NC} "
-  read ENV_INPUT
-  ENV=${ENV_INPUT:-dev}
+    ENV=$(prompt_input "Select environment" "dev|stg|uat|pro" "dev")
 fi
 
-if [[ ! "$ENV" =~ ^(dev|stg|uat|pro)$ ]]; then
-  echo -e "${ERROR}Error: Invalid environment ($ENV).${NC}"; exit 1
-fi
+[[ ! "$ENV" =~ ^(dev|stg|uat|pro)$ ]] && print_error "Invalid environment ($ENV)."
 
 if [ -z "$CHANGE" ]; then
-  echo -ne "${INPUT_L}Select change type ${INPUT_R}(major|minor|patch|skip) [patch]${INPUT_L}:${NC} "
-  read CHANGE_INPUT
-  CHANGE=${CHANGE_INPUT:-patch}
+    CHANGE=$(prompt_input "Select change type" "major|minor|patch|skip" "patch")
 fi
 
-echo -e "\n${BANNER}--- DEPLOYMENT SUMMARY ----------------------${NC}"
-echo -e "${KEY}Worker:    ${VALUE_BLUE}$WORKER_NAME${NC}"
-echo -e "${KEY}Env:       ${VALUE_BLUE}$ENV${NC}"
-echo -e "${KEY}Change:    ${VALUE_BLUE}$CHANGE${NC}"
-echo -e "${BANNER}-----------------------------------------------${NC}"
-
-# 3. Versioning and Commit
-echo -e "\n\n${HEADER}>> STEP [3/5]: VERSION CONTROL${NC}"
+# 3. Versioning (Local)
+print_step "3/5" "LOCAL VERSION CONTROL"
 if [ "$CHANGE" != "skip" ]; then
-  echo -e "${WARN}Bumping version... ($CHANGE)${NC}"
-  
-  # Use Node directly to update the version to avoid 'workspace:' protocol errors in npm CLI
-  VERSION=$(node -e "
-    const fs = require('fs');
-    const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
-    const oldVersion = pkg.version.split('.').map(Number);
+    print_warn "Bumping version locally... ($CHANGE)"
     
-    if ('$CHANGE' === 'major') oldVersion[0]++;
-    else if ('$CHANGE' === 'minor') oldVersion[1]++;
-    else oldVersion[2]++;
-    
-    if ('$CHANGE' !== 'patch') {
-      if ('$CHANGE' === 'major') { oldVersion[1] = 0; oldVersion[2] = 0; }
-      if ('$CHANGE' === 'minor') { oldVersion[2] = 0; }
-    }
-    
-    const newVersion = oldVersion.join('.');
-    pkg.version = newVersion;
-    fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2) + '\n');
-    console.log(newVersion);
-  ")
+    VERSION=$(node -e "
+        const fs = require('fs');
+        const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+        const v = pkg.version.split('.').map(Number);
+        if('$CHANGE'==='major'){ v[0]++; v[1]=0; v[2]=0; }
+        else if('$CHANGE'==='minor'){ v[1]++; v[2]=0; }
+        else { v[2]++; }
+        pkg.version = v.join('.');
+        fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2) + '\n');
+        process.stdout.write(pkg.version);
+    ")
 
-  echo -e "${KEY}   New Version:${VALUE_BLUE} v$VERSION${NC}"
-  
-  echo -e "${WARN}Pushing updates to origin...${NC}"
-  git add package.json
-  [ -f "yarn.lock" ] && git add yarn.lock
-  [ -f "package-lock.json" ] && git add package-lock.json
-  
-  git commit -m "chore($WORKER_NAME): bump version to $VERSION"
-  git push origin HEAD
+    print_kv "New Version" "v$VERSION"
+    git add package.json
+    [ -f "package-lock.json" ] && git add package-lock.json
+    git commit -m "chore($WORKER_NAME): bump version to $VERSION"
 else
-  echo -e "${WARN}Skipping version update...${NC}"
-  VERSION=$(node -p "require('./package.json').version")
+    print_warn "Skipping version update..."
+    VERSION=$(node -p "require('./package.json').version")
 fi
 
-# 4. Tagging
-echo -e "\n\n${HEADER}>> STEP [4/5]: RELEASING TAG${NC}"
+show_summary
+
+# 4. Remote Sync (Push & Tag)
+print_step "4/5" "REMOTE SYNC (PUSH & TAG)"
 TAG_NAME="release/$WORKER_NAME/$ENV/$VERSION"
+print_kv "Pending Tag" "$TAG_NAME"
 
-echo -e "${KEY}Tag Name: ${VALUE_BLUE}$TAG_NAME${NC}"
+echo ""
+confirm_proceed "Push changes and update remote tag?"
+
 if git ls-remote --tags origin | grep -q "refs/tags/$TAG_NAME"; then
-  echo -e "${ERROR}Error: Tag $TAG_NAME already exists on remote.${NC}"
-  exit 1
+    git push --delete origin "$TAG_NAME" || true
 fi
 
+if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
+    git tag -d "$TAG_NAME"
+fi
+
+git push origin HEAD
 git tag "$TAG_NAME"
 git push origin "$TAG_NAME"
+print_warn "Remote repository updated successfully."
 
-# 5. Deployment
-echo -e "\n${HEADER}>> STEP [5/5]: DEPLOYMENT EXECUTION${NC}"
-echo -e "\n${BANNER}--- DEPLOYMENT SUMMARY ----------------------${NC}"
-echo -e "${KEY}Worker:    ${VALUE_BLUE}$WORKER_NAME${NC}"
-echo -e "${KEY}Env:       ${VALUE_BLUE}$ENV${NC}"
-echo -e "${KEY}Change:    ${VALUE_BLUE}$CHANGE${NC}"
-echo -e "${BANNER}-----------------------------------------------${NC}"
+# 5. Deployment Execution
+print_step "5/5" "DEPLOYMENT TO CLOUDFLARE"
+print_kv "Target Env" "$ENV"
+
+echo ""
+confirm_proceed "Do you want to trigger the final deployment?"
 
 npx wrangler deploy --env $ENV
 
-echo -e "\n\n${BANNER}==============================================="
-echo -e "==           DEPLOYMENT COMPLETED            =="
-echo -e "===============================================${NC}"
+show_summary
