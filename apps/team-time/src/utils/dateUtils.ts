@@ -54,6 +54,24 @@ export function calculateDateOffset(date: Date, period: 'day' | 'month' | 'week'
 }
 
 /**
+ * Generates an array of date strings for a given starting date and span.
+ *
+ * @param {string} date - The starting date string (YYYY-MM-DD).
+ * @param {number} span - The number of days in the range.
+ * @returns {string[]} An array of date strings.
+ */
+export function calculateDateRange(date: string, span: number): string[] {
+  const startDate = new Date(date);
+  const dates: string[] = [];
+  for (let i = 0; i < span; i++) {
+    const currentDate = new Date(startDate);
+    currentDate.setUTCDate(currentDate.getUTCDate() + i);
+    dates.push(currentDate.toISOString().slice(0, 10));
+  }
+  return dates;
+}
+
+/**
  * Finds the next available date in a member's row that is not occupied by an allocation.
  *
  * @param {ItemDate[]} dates - The array of all dates in the timeline.
@@ -68,7 +86,9 @@ export function calculateNextFreeDate(
 ): ItemDate | undefined {
   for (let i = startIndex + 1; i < dates.length; i++) {
     const date = dates[i];
-    const isOccupied = memberAllocations.some((alloc) => alloc.iniDate === date.label);
+    const isOccupied = memberAllocations.some((alloc) =>
+      calculateDateRange(alloc.iniDate, alloc.span).includes(date.label)
+    );
     if (!isOccupied) {
       return date;
     }
