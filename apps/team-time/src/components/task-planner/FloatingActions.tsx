@@ -20,7 +20,7 @@ const Action: React.FC<{
       onClick={onClick}
       className={`
         group relative flex items-center justify-end
-        h-12 min-w-[3rem] ml-auto ${color}
+        h-12 min-w-[3rem] ml-auto ${color} ring-0
         rounded-full border-2 border-sky-100
         transition-all duration-300 ease-in-out
         overflow-hidden
@@ -49,7 +49,7 @@ export const FloatingActions: React.FC<FloatingActionsProps> = ({
   setAbsence
 }) => {
   return (
-    <div className="fixed bottom-8 right-8 z-50 flex flex-col gap-4">
+    <div className="fixed bottom-8 right-8 z-40 flex flex-col gap-4">
       <Action
         color={
           absence
