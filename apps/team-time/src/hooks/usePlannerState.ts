@@ -183,6 +183,7 @@ export function usePlannerState() {
     setVersion,
     imports,
     config,
+    setImports,
     handleExport,
     handleImport,
     handleConfigChange,

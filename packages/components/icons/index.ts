@@ -1,3 +1,4 @@
+export * from './AbsenceIcon';
 export * from './AddIcon';
 export * from './CloneIcon';
 export * from './CloudIcon';
@@ -8,4 +9,5 @@ export * from './ModuleIcon';
 export * from './MonitorIcon';
 export * from './PencilIcon';
 export * from './SettingIcon';
+export * from './TargetIcon';
 export * from './UploadIcon';

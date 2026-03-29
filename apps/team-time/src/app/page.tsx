@@ -3,10 +3,8 @@
 import { BodyGrid } from '@packages/layout';
 import Script from 'next/script';
 
-import { PageIcon, SettingIcon } from '@/components/icons';
-import { SettingsModal } from '@/components/settings';
-import { TaskPlanner } from '@/components/task-planner';
-import { usePlannerState } from '@/hooks/usePlannerState';
+import { FloatingActions, PageIcon, SettingIcon, SettingsModal, TaskPlanner } from '@/components';
+import { usePlannerState } from '@/hooks';
 
 export default function Page() {
   const {
@@ -24,6 +22,7 @@ export default function Page() {
     setVersion,
     imports,
     config,
+    setImports,
     handleExport,
     handleImport,
     handleConfigChange,
@@ -86,6 +85,11 @@ export default function Page() {
         setDefaultBadgeKey={setDefaultBadgeKey}
         baseUrl={baseUrl}
         setBaseUrl={setBaseUrl}
+      />
+      <FloatingActions
+        onGoToToday={() => {
+          setImports(imports + 1);
+        }}
       />
     </BodyGrid>
   );
