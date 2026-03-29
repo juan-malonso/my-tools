@@ -47,7 +47,9 @@ function useCustomState<T extends { id: string }>(value: T[]): Utils<T> {
 }
 
 function useConfig(external: External) {
-  const members = useCustomState<Member>(external.members);
+  const members = useCustomState<Member>(
+    external.members.map((member) => ({ ...member, absences: member.absences ?? [] }))
+  );
   const modules = useCustomState<Module>(external.modules);
   const tasks = useCustomState<Task>(external.tasks);
   const allocations = useCustomState<Allocation>(external.allocations);
@@ -80,6 +82,7 @@ export function usePlannerState() {
   const [baseUrl, setBaseUrl] = useState<string>('');
   const [version, setVersion] = useState<number>(1);
   const [imports, setImports] = useState(0);
+  const [absence, setAbsence] = useState(false);
 
   const config = useConfig({
     version,
@@ -89,7 +92,9 @@ export function usePlannerState() {
       defaultBadgeKey,
       baseUrl
     },
-    members: [{ id: '-', name: '', title: '', color: '', schedule: [8, 8, 8, 8, 8, 0, 0] }],
+    members: [
+      { id: '-', name: '', title: '', color: '', schedule: [8, 8, 8, 8, 8, 0, 0], absences: [] }
+    ],
     modules: [],
     tasks: [],
     allocations: []
@@ -102,7 +107,9 @@ export function usePlannerState() {
       setDefaultBadgeKey(data.general.defaultBadgeKey);
       setBaseUrl(data.general.baseUrl ?? '');
       setVersion(data.version || 1);
-      config.members.raw(data.members);
+      config.members.raw(
+        data.members.map((member) => ({ ...member, absences: member.absences ?? [] }))
+      );
       config.modules.raw(data.modules);
       config.tasks.raw(data.tasks);
       config.allocations.raw(data.allocations);
@@ -187,6 +194,8 @@ export function usePlannerState() {
     handleExport,
     handleImport,
     handleConfigChange,
-    handleConfigExport
+    handleConfigExport,
+    absence,
+    setAbsence
   };
 }

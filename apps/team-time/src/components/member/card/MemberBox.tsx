@@ -30,7 +30,7 @@ export const MemberBox: React.FC<{
             <ColorPicker
               shape="circle"
               size="lg"
-              className="border border-slate-500/50 rounded-full shrink-0"
+              className="border-slate-400 shrink-0"
               value={member.color}
               onChange={(color) => {
                 setMember({ ...member, color });
@@ -48,12 +48,12 @@ export const MemberBox: React.FC<{
           <div
             className={`
               h-full flex flex-col justify-center gap-2 whitespace-nowrap
-              transition-all  ease-in-out
+              transition-all  ease-in-out px-2
               ${currentWidth < USER_W ? 'w-0 opacity-0 translate-x-[-10px]' : 'w-full opacity-100 translate-x-0'}
             `}
           >
             <Input
-              className="w-full text-lg bg-transparent border-none focus:ring-0 px-2"
+              className="w-full text-lg bg-transparent border border-slate-400/40 focus:ring-0 px-2"
               value={member.name}
               placeholder="Name"
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +61,7 @@ export const MemberBox: React.FC<{
               }}
             />
             <Input
-              className="w-full text-sm bg-transparent border-none focus:ring-0 px-2"
+              className="w-full text-sm bg-transparent border border-slate-400/40 focus:ring-0 px-2"
               value={member.title}
               placeholder="Title"
               onChange={(e: ChangeEvent<HTMLInputElement>) => {

@@ -16,7 +16,7 @@ import type { ItemDate, ItemMonth, ItemWeek } from '@/models';
 
 import { getWeekNumber } from './dateUtils';
 
-const todayStyle = 'bg-sky-400/10 text-sky-400';
+const todayStyle = 'bg-sky-400/30 text-sky-400';
 const weekendStyle = 'bg-slate-900/50 text-slate-500';
 
 /**

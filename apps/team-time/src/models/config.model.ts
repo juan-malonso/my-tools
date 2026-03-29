@@ -11,6 +11,8 @@ export interface Utils<T> {
   raw: (items: T[]) => void;
 }
 
+type ExternalMember = Omit<Member, 'absences'> & { absences?: string[] };
+
 export interface External {
   version: number;
 
@@ -21,7 +23,7 @@ export interface External {
     baseUrl?: string;
   };
 
-  members: Member[];
+  members: ExternalMember[];
   modules: Module[];
   tasks: Task[];
 

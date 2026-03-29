@@ -4,4 +4,5 @@ export interface Member {
   title: string;
   color: string;
   schedule: number[];
+  absences: string[];
 }

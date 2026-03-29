@@ -14,6 +14,7 @@ interface TaskRowProps {
     add: (a: Allocation) => void;
     set: (a: Allocation) => void;
   };
+  absences: string[];
   modules: Module[];
   tasks: Task[];
   dragged: Allocation | undefined;
@@ -31,6 +32,7 @@ export const TaskRow: React.FC<TaskRowProps> = ({
   member,
   dates,
   allocations,
+  absences,
   modules,
   tasks,
   dragged,
@@ -87,6 +89,7 @@ export const TaskRow: React.FC<TaskRowProps> = ({
           allocation={allocation}
           addAllocation={allocations.add}
           setAllocation={allocations.set}
+          isAbsence={absences.includes(cell.date.label)}
           modules={modules}
           tasks={tasks}
           addTask={addTask(member.id, cell.date)}

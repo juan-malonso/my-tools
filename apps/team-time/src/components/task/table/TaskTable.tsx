@@ -62,6 +62,7 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
                 member={member}
                 dates={dates}
                 allocations={allocations}
+                absences={member.absences}
                 modules={modules.values}
                 tasks={tasks.values}
                 dragged={dragged}

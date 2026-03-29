@@ -15,7 +15,8 @@ export const UserSettings: React.FC<UserSettingsProps> = ({ members }) => {
       name: 'New Member',
       title: 'New Title',
       color: '#ef4444',
-      schedule: [8, 8, 8, 8, 8, 0, 0]
+      schedule: [8, 8, 8, 8, 8, 0, 0],
+      absences: []
     });
   };
 

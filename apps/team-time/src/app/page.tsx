@@ -26,7 +26,9 @@ export default function Page() {
     handleExport,
     handleImport,
     handleConfigChange,
-    handleConfigExport
+    handleConfigExport,
+    absence,
+    setAbsence
   } = usePlannerState();
 
   return (
@@ -66,7 +68,7 @@ export default function Page() {
         </div>
       }
     >
-      <TaskPlanner config={config} imports={imports} />
+      <TaskPlanner config={config} imports={imports} absence={absence} />
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => {
@@ -90,6 +92,8 @@ export default function Page() {
         onGoToToday={() => {
           setImports(imports + 1);
         }}
+        absence={absence}
+        setAbsence={setAbsence}
       />
     </BodyGrid>
   );

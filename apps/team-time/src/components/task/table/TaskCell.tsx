@@ -16,6 +16,7 @@ import { DropBox, HolderBox, TaskBox } from '../card';
 interface TaskCellProps {
   index: number;
   cell: TaskMetadata;
+  isAbsence: boolean;
   allocation?: Allocation;
   addAllocation: (allocation: Allocation) => void;
   setAllocation: (allocation: Allocation) => void;
@@ -33,6 +34,7 @@ interface TaskCellProps {
 export const TaskCell: React.FC<TaskCellProps> = ({
   index,
   cell,
+  isAbsence,
   allocation,
   addAllocation,
   setAllocation,
@@ -115,7 +117,7 @@ export const TaskCell: React.FC<TaskCellProps> = ({
 
   return (
     <td
-      className={`border-transparent`}
+      className={`border-transparent ${isAbsence ? 'bg-yellow-600/40' : ''}`}
       onDragOver={handleDragOver}
       onDragEnter={onDragEnter}
       onDrop={onDragDrop}

@@ -1,17 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { BackgroundTable } from '@/components/back';
-import { MemberTable } from '@/components/member';
-import { TaskTable } from '@/components/task';
+import { AbsenceTable, BackgroundTable, MemberTable, TaskTable } from '@/components';
 import type { Config } from '@/models';
 import { CELL_W, DATE_H, getDates, MONTH_H, USER_W, WEEK_H } from '@/utils';
 
 interface TaskPlannerProps {
   config: Config;
   imports: number;
+  absence: boolean;
 }
 
-export const TaskPlanner: React.FC<TaskPlannerProps> = ({ config, imports }) => {
+export const TaskPlanner: React.FC<TaskPlannerProps> = ({ config, imports, absence }) => {
   const head = MONTH_H + WEEK_H + DATE_H + 13;
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -67,8 +66,12 @@ export const TaskPlanner: React.FC<TaskPlannerProps> = ({ config, imports }) => 
             <MemberTable config={config} scrollAmount={scrollAmount} />
           </div>
 
-          <div className="relative flex-1">
+          <div className={`relative flex-1`}>
             <TaskTable config={config} />
+          </div>
+
+          <div className="absolute flex-1" style={{ left: USER_W }}>
+            {absence && <AbsenceTable config={config} />}
           </div>
         </div>
       </div>
