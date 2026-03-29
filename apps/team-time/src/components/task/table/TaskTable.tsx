@@ -88,8 +88,9 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
         }}
         allocation={selectedAllocation}
         tasks={tasks}
+        allocations={allocations}
+        members={members}
         modules={modules}
-        onDeleteAllocation={allocations.del}
         defaultBadgeKey={config.general.defaultBadgeKey}
       />
     </>

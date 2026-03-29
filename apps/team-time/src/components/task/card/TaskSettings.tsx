@@ -25,8 +25,8 @@ export const TaskSettings: React.FC<{
   };
 
   return (
-    <div className="flex flex-col gap-2 bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
-      <div className="flex gap-2 items-center justify-between">
+    <div className="flex flex-col gap-4 bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
+      <div className="flex gap-4 items-center justify-between">
         <Input
           value={task.title}
           size="sm"
@@ -36,7 +36,7 @@ export const TaskSettings: React.FC<{
           }}
         />
         <CreateButton onClick={addTicket} size="sm" className="text-nowrap">
-          Add Badge
+          Badge
         </CreateButton>
       </div>
 

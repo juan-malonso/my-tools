@@ -4,7 +4,7 @@ import { CreateButton, Input } from '@component/forms';
 import { PageIcon } from '@/components/icons';
 import { type Allocation, type Member, type Module, type Task, type Utils } from '@/models';
 
-import { AllocationSettings } from '../../allocation/AllocationSettings';
+import { AllocationSettings } from '../../task';
 
 interface TasksSettingsProps {
   tasks: Utils<Task>;
