@@ -1,0 +1,22 @@
+# 02 - Índice de Módulos y Archivos Clave
+
+Este documento sirve como un diccionario de los componentes, módulos y scripts más importantes del proyecto, describiendo su única responsabilidad.
+
+| Archivo / Carpeta                            | Responsabilidad (SRP)                                                                                                                                                                                                   | Dependencias Clave                                |
+| :------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------ |
+| **`/src/app/page.tsx`**                      | **Componente Raíz (Contenedor):** Orquesta el renderizado de la UI principal. En su estado actual, actúa como "God Component", pero su responsabilidad objetivo es solo la composición de la UI.                        | `usePlannerState`, `TaskPlanner`, `SettingsModal` |
+| **`/src/hooks/usePlannerState.ts`**          | **Gestor de Estado Central:** (Propuesto) Hook personalizado que encapsula todo el estado de la aplicación, la lógica de negocio y las acciones (import/export, fechas, etc.). Provee una API limpia a los componentes. | `react`, `date-fns` (o similar)                   |
+| **`/src/components/features/task-planner/`** | **Módulo Principal:** Contiene todos los componentes y la lógica relacionados con la funcionalidad del planificador de tareas.                                                                                          | `usePlannerState`                                 |
+| **`.../table/BackgroundTable.tsx`**          | **Renderizado de la Grilla:** Dibuja la grilla de fondo del planificador (días, semanas, meses) y gestiona la lógica de renderizado de celdas.                                                                          | `reportGenerators`, `dateUtils`                   |
+| **`.../report/ReportModal.tsx`**             | **UI del Modal de Reporte:** Presenta los datos del reporte semanal y gestiona las interacciones del usuario dentro del modal (navegación entre semanas).                                                               | `reportGenerators`                                |
+| **`.../utils/reportGenerators.ts`**          | **Lógica de Reportes:** (Propuesto) Funciones puras para calcular horas y generar la estructura de datos del reporte semanal.                                                                                           | `dateUtils`                                       |
+| **`/src/utils/dateUtils.ts`**                | **Utilidades de Fechas:** (Propuesto) Funciones centralizadas para la manipulación y formateo de fechas (`getDate`, `getWeek`).                                                                                         | -                                                 |
+| **`/scripts/provision-user.js`**             | **Script de Aprovisionamiento:** (Propuesto) Lógica Node.js para encriptar la configuración por defecto de un nuevo usuario y generar el `hmacId` para la inserción en la base de datos.                                | `crypto` (Node.js)                                |
+| **`/populate.sh`**                           | **Orquestador de Aprovisionamiento:** Script de shell que invoca a `provision-user.js` y utiliza `wrangler` para insertar el nuevo usuario en la base de datos D1.                                                      | `wrangler`, `node`                                |
+| **`/init.sh`**                               | **Inicializador de DB:** Script de shell que aplica el esquema SQL a la base de datos D1 local para el desarrollo.                                                                                                      | `wrangler`                                        |
+| **`/schema.sql`**                            | **Esquema de Base de Datos:** Define la estructura de las tablas en Cloudflare D1 (ej. la tabla `files` con `id` y `content`).                                                                                          | -                                                 |
+
+**Navegación:**
+
+- Volver al Mapa de Arquitectura: 00_ARCHITECTURE_MAP.md
+- Ver Interfaces y API: 03_API_AND_INTERFACES.md
