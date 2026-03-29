@@ -4,22 +4,39 @@
   "main": ".open-next/worker.js",
   "compatibility_date": "2025-04-01",
   "compatibility_flags": ["nodejs_compat"],
-  "assets": {
-    "directory": ".open-next/assets",
-    "binding": "ASSETS"
+
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "invocation_logs": false,
+      "head_sampling_rate": 1
+    },
+    "traces": {
+      "enabled": true,
+      "head_sampling_rate": 0.1
+    }
   },
-  "routes": [
-    {
-      "pattern": "team-time.deploy.men/*",
-      "zone_name": "deploy.men"
+
+  "envs": {
+    "dev": {
+      "assets": {
+        "directory": ".open-next/assets",
+        "binding": "ASSETS"
+      },
+      "routes": [
+        {
+          "pattern": "team-time.deploy.men/*",
+          "zone_name": "deploy.men"
+        }
+      ],
+      "d1_databases": [
+        {
+          "binding": "TEAM_TIME_DB",
+          "database_name": "team_time_db",
+          "database_id": "c0131dac-600a-4dd4-b5a6-5510bab76bc2",
+          "remote": true
+        }
+      ]
     }
-  ],
-  "d1_databases": [
-    {
-      "binding": "TEAM_TIME_DB",
-      "database_name": "team_time_db",
-      "database_id": "c0131dac-600a-4dd4-b5a6-5510bab76bc2",
-      "remote": true
-    }
-  ]
+  }
 }
