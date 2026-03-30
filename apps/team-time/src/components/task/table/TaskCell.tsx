@@ -29,6 +29,7 @@ interface TaskCellProps {
   handleDrag: (e: DragEvent<HTMLDivElement>, allocation: Allocation) => void;
   setResizing: (resize: Resize) => void;
   onEdit: (allocation: Allocation) => void;
+  badgeUrl: string;
 }
 
 export const TaskCell: React.FC<TaskCellProps> = ({
@@ -46,7 +47,8 @@ export const TaskCell: React.FC<TaskCellProps> = ({
   handleDrop,
   handleDrag,
   setResizing,
-  onEdit
+  onEdit,
+  badgeUrl
 }) => {
   const { isResizing, isDragging, isOver, isTask, isTaskExtension } = getRenderState(
     cell,
@@ -93,6 +95,7 @@ export const TaskCell: React.FC<TaskCellProps> = ({
             onDuplicate={onDuplicate}
             onEdit={onEdit}
             isResizing={isResizing}
+            badgeUrl={badgeUrl}
           />
         </div>
       </div>

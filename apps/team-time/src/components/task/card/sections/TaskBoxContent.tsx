@@ -8,7 +8,8 @@ export const TaskBoxContent: React.FC<{
   allocation: Allocation;
   updateAllocation: (allocation: Allocation) => void;
   actions: { onClick: () => void; children: React.ReactNode }[];
-}> = ({ module, modules, task, allocation, updateAllocation }) => {
+  badgeUrl: string;
+}> = ({ module, modules, task, allocation, updateAllocation, badgeUrl }) => {
   return (
     <div className="p-1 pl-3 flex flex-col gap-1">
       <div className="flex flex-row items-center gap-2">
@@ -32,27 +33,29 @@ export const TaskBoxContent: React.FC<{
 
       <div className="flex gap-1 flex-wrap mt-1">
         {task.ticket.map((t, i) => (
-          <TaskBoxBadget key={i} module={module}>
-            {t.id}
-          </TaskBoxBadget>
+          <TaskBoxBadget key={i} module={module} badgeUrl={badgeUrl} id={t.id} />
         ))}
       </div>
     </div>
   );
 };
 
-const TaskBoxBadget: React.FC<{ module?: Module; children: React.ReactNode }> = ({
+const TaskBoxBadget: React.FC<{ module?: Module; id: string; badgeUrl: string }> = ({
   module,
-  children
+  id,
+  badgeUrl
 }) => {
   return (
-    <div
+    <a
       style={{ backgroundColor: module?.color ?? '#9ca3af' }}
       className={`px-1 py-0.5 rounded text-nowrap
-      text-slate-50 text-xs
-    `}
+          text-slate-50 text-xs 
+        `}
+      href={`${badgeUrl}/${id}`}
+      target="_blank"
+      rel="noreferrer"
     >
-      {children}
-    </div>
+      {id}
+    </a>
   );
 };

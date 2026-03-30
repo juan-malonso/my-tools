@@ -74,6 +74,7 @@ export const TaskTable: React.FC<TaskTableProps> = ({ config }) => {
                 setResizing={setResizing}
                 onEdit={handleEdit}
                 addTask={addTask}
+                badgeUrl={config.general.baseUrl ?? ''}
               />
             );
           })}

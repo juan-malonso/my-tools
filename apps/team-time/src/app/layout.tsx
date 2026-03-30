@@ -4,8 +4,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Screen Wall',
-  description: 'Screen Wall Application'
+  title: 'Team Time',
+  description: 'Team Time Application'
 };
 
 export default function RootLayout({

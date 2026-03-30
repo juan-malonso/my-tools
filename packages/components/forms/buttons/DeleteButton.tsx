@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { Button, type ButtonProps } from './Button';
 import { DeleteIcon } from '../../icons';
+
+import { Button, type ButtonProps } from './Button';
 
 export const DeleteButton: React.FC<ButtonProps> = ({ children, ...props }) => {
   return (

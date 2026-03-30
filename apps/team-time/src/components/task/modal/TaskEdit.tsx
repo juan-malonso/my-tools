@@ -42,7 +42,7 @@ export const TaskEdit: React.FC<TaskEditProps> = ({
       onClose={onClose}
       header="Edit Task"
       body={
-        <div className="p-4 flex flex-col gap-6 text-white">
+        <div className="flex flex-col gap-6 text-white">
           <AllocationSettings
             task={task}
             tasks={tasks}

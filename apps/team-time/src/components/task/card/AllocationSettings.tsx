@@ -47,7 +47,7 @@ export const AllocationSettings: React.FC<{
   };
 
   return (
-    <div key={task.id} className=" bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
+    <div key={task.id} className=" bg-slate-900/50 p-4 rounded-lg border border-slate-700">
       <div className="grid grid-cols-2 grid-cols-[auto_300px] gap-4">
         <TaskSettings task={task} setTask={tasks.set} defaultBadgeKey={defaultBadgeKey} />
         <div className="flex flex-col gap-4">

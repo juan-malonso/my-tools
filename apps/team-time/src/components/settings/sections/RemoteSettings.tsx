@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { FormField, Input } from '@component/forms';
+import { CloseButton, CreateButton, FormField, Input } from '@component/forms';
 
-import { CloudIcon } from '@/components';
+import { CloudIcon, DownloadIcon, UploadIcon } from '@/components';
 import { type Config } from '@/models';
 
 interface RemoteSettingsProps {
@@ -191,43 +191,48 @@ export const RemoteSettings: React.FC<RemoteSettingsProps> = ({
       <hr className="border-slate-600" />
 
       <div className="flex flex-col gap-8">
-        <div className="flex flex-col gap-2 bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg text-slate-300">Credentials</h3>
-              <span className="px-2.5 py-0.5 text-xs font-mono font-medium bg-sky-900/30 text-sky-400 rounded-full border border-sky-800/50">
-                current v{version.toString()}
-              </span>
-            </div>
-            <CredentialsForm
-              username={username}
-              setUsername={setUsername}
-              password={password}
-              setPassword={setPassword}
-            />
-            <div className="flex justify-between items-center p-2 mt-2 min-h-12">
-              <StatusMessages error={error} success={success} />
-              <div className="flex justify-end gap-4 shrink-0">
-                <button
-                  className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-md transition-colors disabled:opacity-50"
-                  onClick={() => {
-                    setPendingAction('upload');
-                  }}
-                  disabled={!username.trim() || !password.trim() || isLoading}
-                >
-                  {isLoading && pendingAction === 'upload' ? 'Uploading...' : 'Upload'}
-                </button>
-                <button
-                  className="bg-sky-600 hover:bg-sky-500 text-white px-4 py-2 rounded-md transition-colors disabled:opacity-50"
-                  onClick={() => {
-                    setPendingAction('download');
-                  }}
-                  disabled={!username.trim() || !password.trim() || isLoading}
-                >
-                  {isLoading && pendingAction === 'download' ? 'Downloading...' : 'Download'}
-                </button>
+        <div className="flex flex-col gap-2 bg-slate-900 p-4 rounded-lg border border-slate-700/50">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg text-slate-300">Credentials</h3>
+            <span className="px-2 text-xs font-mono font-medium bg-sky-900/30 text-sky-400 rounded-full border border-sky-700">
+              current v{version.toString()}
+            </span>
+          </div>
+
+          <hr className="mb-2 border-slate-600" />
+
+          <CredentialsForm
+            username={username}
+            setUsername={setUsername}
+            password={password}
+            setPassword={setPassword}
+          />
+          <div className="flex justify-between items-center gap-2 min-h-12">
+            <StatusMessages error={error} success={success} />
+            <CloseButton
+              size="md"
+              disabled={!username.trim() || !password.trim() || isLoading}
+              onClick={() => {
+                setPendingAction('upload');
+              }}
+            >
+              <div className="flex items-center gap-2">
+                <UploadIcon className="h-5 w-5" />
+                Upload
               </div>
-            </div>
+            </CloseButton>
+            <CreateButton
+              size="md"
+              disabled={!username.trim() || !password.trim() || isLoading}
+              onClick={() => {
+                setPendingAction('download');
+              }}
+            >
+              <div className="flex items-center gap-2">
+                <DownloadIcon className="h-5 w-5" />
+                Download
+              </div>
+            </CreateButton>
           </div>
         </div>
       </div>
@@ -250,7 +255,7 @@ const CredentialsForm: React.FC<{
   password: string;
   setPassword: (v: string) => void;
 }> = ({ username, setUsername, password, setPassword }) => (
-  <div className="grid grid-cols-2 gap-6 p-2">
+  <div className="grid grid-cols-2 gap-6">
     <FormField label="Username">
       <Input
         type="text"
@@ -280,14 +285,14 @@ const StatusMessages: React.FC<{ error: string | null; success: string | null }>
   error,
   success
 }) => (
-  <div className="flex-1 mr-4">
+  <div className="flex-1">
     {error && (
-      <div className="text-sm font-medium text-red-400 bg-red-400/10 px-3 py-2 rounded border border-red-400/20">
+      <div className="text-sm font-medium text-red-400 bg-red-400/10 px-3 py-2 rounded-lg border border-red-400/50">
         {error}
       </div>
     )}
     {success && (
-      <div className="text-sm font-medium text-emerald-400 bg-emerald-400/10 px-3 py-2 rounded border border-emerald-400/20">
+      <div className="text-sm font-medium text-emerald-400 bg-emerald-400/10 px-3 py-2 rounded-lg border border-emerald-400/50">
         {success}
       </div>
     )}

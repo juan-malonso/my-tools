@@ -26,6 +26,7 @@ interface TaskRowProps {
   setResizing: (resize: Resize) => void;
   onEdit: (allocation: Allocation) => void;
   addTask: (memberId: string, date: ItemDate) => () => void;
+  badgeUrl: string;
 }
 
 export const TaskRow: React.FC<TaskRowProps> = ({
@@ -43,7 +44,8 @@ export const TaskRow: React.FC<TaskRowProps> = ({
   handleDrag,
   setResizing,
   onEdit,
-  addTask
+  addTask,
+  badgeUrl
 }) => {
   const memberTasks = useMemo(
     () => allocations.values.filter((a) => a.memberId === member.id),
@@ -99,6 +101,7 @@ export const TaskRow: React.FC<TaskRowProps> = ({
           handleDrag={handleDrag}
           setResizing={setResizing}
           onEdit={onEdit}
+          badgeUrl={badgeUrl}
         />
       ))}
     </tr>

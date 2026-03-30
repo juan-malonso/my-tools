@@ -1,7 +1,7 @@
 import React from 'react';
 
-type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost';
-type ButtonSize = 'sm' | 'md' | 'lg';
+type ButtonVariant = 'danger' | 'ghost' | 'primary' | 'secondary';
+type ButtonSize = 'lg' | 'md' | 'sm';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -31,7 +31,7 @@ export const Button: React.FC<ButtonProps> = ({
   className = '',
   ...props
 }) => {
-  const styles = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`;
+  const styles = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}  disabled:opacity-50`;
 
   return (
     <button className={styles} {...props}>

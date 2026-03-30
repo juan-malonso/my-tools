@@ -20,6 +20,7 @@ export const TaskBox: React.FC<{
   onDuplicate: (allocation: Allocation) => void;
   onEdit: (allocation: Allocation) => void;
   isResizing: boolean;
+  badgeUrl: string;
 }> = ({
   allocation,
   modules,
@@ -29,7 +30,8 @@ export const TaskBox: React.FC<{
   updateAllocation,
   onDuplicate,
   onEdit,
-  isResizing
+  isResizing,
+  badgeUrl
 }) => {
   const task = tasks.find((t) => t.id === allocation.taskId);
   const mod = modules.find((m) => m.id === allocation.moduleId);
@@ -113,6 +115,7 @@ export const TaskBox: React.FC<{
           modules={modules}
           actions={actions}
           updateAllocation={updateAllocation}
+          badgeUrl={badgeUrl}
         />
         <TaskBoxActions module={mod} actions={actions} />
       </div>
