@@ -3,6 +3,6 @@ export interface Member {
   name: string;
   title: string;
   color: string;
-  schedule: number[];
+  schedule: boolean[];
   absences: string[];
 }

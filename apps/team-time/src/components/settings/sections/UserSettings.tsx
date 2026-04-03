@@ -15,7 +15,7 @@ export const UserSettings: React.FC<UserSettingsProps> = ({ members }) => {
       name: 'New Member',
       title: 'New Title',
       color: '#ef4444',
-      schedule: [8, 8, 8, 8, 8, 0, 0],
+      schedule: [true, true, true, true, true, false, false],
       absences: []
     });
   };
@@ -57,8 +57,8 @@ const UserRow: React.FC<{
     <div
       className={`
         group p-3 gap-3 flex items-center
-        bg-slate-900 hover:bg-slate-900/50 
-        rounded-lg border border-slate-900 hover:border-slate-600 
+        bg-slate-900 hover:bg-slate-900/50
+        rounded-lg border border-slate-900 hover:border-slate-600
         transition-all duration-200
       `}
     >
@@ -98,25 +98,33 @@ const UserRow: React.FC<{
         </div>
 
         <div className="flex items-center justify-between gap-2">
-          {member.schedule.map((hours, index) => (
-            <FormField key={index} label={days[index]} className="w-8">
-              <Input
-                type="number"
-                value={hours}
-                size="sm"
-                className="w-8"
-                step={0.1}
-                onChange={(e) => {
-                  const newSchedule = [...member.schedule];
-                  newSchedule[index] = Number(e.target.value) || 0;
-                  setMember({
-                    ...member,
-                    schedule: newSchedule
-                  });
-                }}
-              />
+          <div className="w-1/2 flex">
+            <FormField label={'Schedule'}>
+              <div className="flex items-center gap-2">
+                {member.schedule.map((isWorking, index) => {
+                  return (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => {
+                        setMember({
+                          ...member,
+                          schedule: member.schedule.map((bool, i) => (i === index ? !bool : bool))
+                        });
+                      }}
+                      className={`w-1/7 p-2 rounded-md text-xs font-semibold transition-all duration-200 ${
+                        isWorking
+                          ? 'bg-sky-600 text-white hover:bg-sky-500'
+                          : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                      }`}
+                    >
+                      {days[index]}
+                    </button>
+                  );
+                })}
+              </div>
             </FormField>
-          ))}
+          </div>
           <div className="w-1/2" />
         </div>
       </div>

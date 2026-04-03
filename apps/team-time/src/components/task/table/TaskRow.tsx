@@ -62,9 +62,13 @@ export const TaskRow: React.FC<TaskRowProps> = ({
 
       const next = calculateNextFreeDate(dates, memberTasks, j);
 
+      const weekDay = (date.date.getDay() + 6) % 7;
+      const workingDay = member.schedule[weekDay];
+
       const cell: TaskMetadata = {
         member,
         date,
+        workingDay,
         task: allocation?.id,
         span: currentSpan,
         next: next?.label,

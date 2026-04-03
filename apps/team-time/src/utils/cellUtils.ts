@@ -17,7 +17,7 @@ import type { ItemDate, ItemMonth, ItemWeek } from '@/models';
 import { getWeekNumber } from './dateUtils';
 
 const todayStyle = 'bg-sky-400/30 text-sky-400';
-const weekendStyle = 'bg-slate-900/50 text-slate-500';
+const weekendStyle = 'bg-slate-900/30 text-slate-500';
 
 /**
  * Determines the background and text color for a cell based on the date.

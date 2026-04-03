@@ -11,7 +11,10 @@ export interface Utils<T> {
   raw: (items: T[]) => void;
 }
 
-type ExternalMember = Omit<Member, 'absences'> & { absences?: string[] };
+type ExternalMember = Omit<Member, 'absences' | 'schedule'> & {
+  absences?: string[];
+  schedule?: (boolean | number)[];
+};
 
 export interface External {
   version: number;

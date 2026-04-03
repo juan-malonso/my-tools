@@ -83,7 +83,7 @@ export const TaskCell: React.FC<TaskCellProps> = ({
 
   if (isTask && !!allocation) {
     children = (
-      <div className="relative h-full w-full ">
+      <div className="relative h-full w-full z-10">
         <div key="taskbox" className="absolute h-full w-full top-0 left-0">
           <TaskBox
             allocation={allocation}
@@ -118,9 +118,21 @@ export const TaskCell: React.FC<TaskCellProps> = ({
     );
   }
 
+  let color = '';
+  switch (true) {
+    case isAbsence:
+      color = 'bg-yellow-600/30';
+      break;
+    case !cell.workingDay:
+      color = 'bg-[rgba(0,0,0,0.3)]';
+      break;
+    default:
+      break;
+  }
+
   return (
     <td
-      className={`border-transparent ${isAbsence ? 'bg-yellow-600/40' : ''}`}
+      className={`border-2 border-slate-500 relative ${color}`}
       onDragOver={handleDragOver}
       onDragEnter={onDragEnter}
       onDrop={onDragDrop}

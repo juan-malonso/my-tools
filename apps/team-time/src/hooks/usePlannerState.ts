@@ -46,73 +46,86 @@ function useCustomState<T extends { id: string }>(value: T[]): Utils<T> {
   );
 }
 
-function useConfig(external: External) {
-  const members = useCustomState<Member>(
-    external.members.map((member) => ({ ...member, absences: member.absences ?? [] }))
-  );
-  const modules = useCustomState<Module>(external.modules);
-  const tasks = useCustomState<Task>(external.tasks);
-  const allocations = useCustomState<Allocation>(external.allocations);
+const mapExternalToInternal = (external: External) => {
+  const defaultSchedule = [true, true, true, true, true, false, false];
+  const members: Member[] = external.members.map((member) => ({
+    ...member,
+    absences: member.absences ?? [],
+    schedule: member.schedule?.map((s) => !!s) ?? defaultSchedule
+  }));
 
-  const config = useMemo<Config>(() => {
-    return {
-      general: {
-        iniDate: new Date(external.general.iniDate),
-        endDate: new Date(external.general.endDate),
-        defaultBadgeKey: external.general.defaultBadgeKey,
-        baseUrl: external.general.baseUrl ?? ''
-      },
-      members,
-      modules,
-      tasks,
-      allocations
-    };
-  }, [external.general, members, modules, tasks, allocations]);
-
-  return config;
-}
+  return {
+    general: {
+      iniDate: new Date(external.general.iniDate),
+      endDate: new Date(external.general.endDate),
+      defaultBadgeKey: external.general.defaultBadgeKey,
+      baseUrl: external.general.baseUrl ?? ''
+    },
+    version: external.version || 1,
+    members,
+    modules: external.modules,
+    tasks: external.tasks,
+    allocations: external.allocations
+  };
+};
 
 export function usePlannerState() {
   const date = new Date();
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [iniDate, setIniDate] = useState<Date>(calculateDateOffset(date, 'day', -2));
-  const [endDate, setEndDate] = useState<Date>(calculateDateOffset(date, 'month', 2));
+  const [iniDate, setIniDate] = useState<Date>(() => calculateDateOffset(date, 'day', -2));
+  const [endDate, setEndDate] = useState<Date>(() => calculateDateOffset(date, 'month', 2));
   const [defaultBadgeKey, setDefaultBadgeKey] = useState<string>('TSK-001');
   const [baseUrl, setBaseUrl] = useState<string>('');
   const [version, setVersion] = useState<number>(1);
   const [imports, setImports] = useState(0);
   const [absence, setAbsence] = useState(false);
 
-  const config = useConfig({
-    version,
-    general: {
-      iniDate: iniDate.toISOString().slice(0, 10),
-      endDate: endDate.toISOString().slice(0, 10),
-      defaultBadgeKey,
-      baseUrl
-    },
-    members: [
-      { id: '-', name: '', title: '', color: '', schedule: [8, 8, 8, 8, 8, 0, 0], absences: [] }
-    ],
-    modules: [],
-    tasks: [],
-    allocations: []
-  });
+  const members = useCustomState<Member>([
+    {
+      id: '-',
+      name: '',
+      title: '',
+      color: '',
+      schedule: [true, true, true, true, true, false, false],
+      absences: []
+    }
+  ]);
+  const modules = useCustomState<Module>([]);
+  const tasks = useCustomState<Task>([]);
+  const allocations = useCustomState<Allocation>([]);
+
+  const config = useMemo<Config>(
+    () => ({
+      general: {
+        iniDate,
+        endDate,
+        defaultBadgeKey,
+        baseUrl: baseUrl
+      },
+      members,
+      modules,
+      tasks,
+      allocations
+    }),
+    [iniDate, endDate, defaultBadgeKey, baseUrl, members, modules, tasks, allocations]
+  );
 
   const applyExternalConfig = (data: External) => {
     try {
-      setIniDate(new Date(data.general.iniDate));
-      setEndDate(new Date(data.general.endDate));
-      setDefaultBadgeKey(data.general.defaultBadgeKey);
-      setBaseUrl(data.general.baseUrl ?? '');
-      setVersion(data.version || 1);
-      config.members.raw(
-        data.members.map((member) => ({ ...member, absences: member.absences ?? [] }))
-      );
-      config.modules.raw(data.modules);
-      config.tasks.raw(data.tasks);
-      config.allocations.raw(data.allocations);
+      const internalConfig = mapExternalToInternal(data);
+
+      setIniDate(internalConfig.general.iniDate);
+      setEndDate(internalConfig.general.endDate);
+      setDefaultBadgeKey(internalConfig.general.defaultBadgeKey);
+      setBaseUrl(internalConfig.general.baseUrl);
+      setVersion(internalConfig.version);
+
+      members.raw(internalConfig.members);
+      modules.raw(internalConfig.modules);
+      tasks.raw(internalConfig.tasks);
+      allocations.raw(internalConfig.allocations);
+
       setImports((prev) => prev + 1);
     } catch (error) {
       console.error('Error applying configuration:', error);
