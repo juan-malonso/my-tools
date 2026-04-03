@@ -99,7 +99,7 @@ const UserRow: React.FC<{
 
         <div className="flex items-center justify-between gap-2">
           <div className="w-1/2 flex">
-            <FormField label={'Schedule'}>
+            <FormField label={'Working Days'}>
               <div className="flex items-center gap-2">
                 {member.schedule.map((isWorking, index) => {
                   return (
