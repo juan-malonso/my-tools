@@ -9,7 +9,6 @@
  * --- Functions ---------------------------------------------------------------
  * - Dates and Format: calculateTaskDates, formatTaskHeader, formatTaskTickets, formatTaskEntry
  * - Reports: generateWeeklyReport
- * - Utilities: calculateTaskHours
  * ========================================================================= */
 
 import type { Allocation, ItemDate, Member, Module, Task } from '@/models';
@@ -219,23 +218,3 @@ export const generateWeeklyReport = ({
 
   return text;
 };
-
-/**
- * Calculates the total scheduled hours for a member during a specific allocation.
- *
- * @param {Allocation} allocation - The task allocation.
- * @param {Member} member - The team member assigned to the allocation.
- * @returns {number} The total calculated hours.
- */
-export function calculateTaskHours(allocation: Allocation, member: Member): number {
-  let total = 0;
-  const startDate = new Date(allocation.iniDate);
-  for (let i = 0; i < allocation.span; i++) {
-    const current = new Date(startDate);
-    current.setDate(startDate.getDate() + i);
-    const dayIndex = current.getDay();
-    const scheduleIndex = (dayIndex + 6) % 7;
-    total += member.schedule[scheduleIndex] || 0;
-  }
-  return total;
-}

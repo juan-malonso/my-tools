@@ -13,7 +13,7 @@ export const MemberBox: React.FC<{
   const currentWidth = Math.min(Math.max(64, 22 + USER_W - scrollAmount), USER_W);
 
   return (
-    <td className="sticky left-[-22px] z-50">
+    <td className="sticky left-[-22px]">
       <div
         style={{ height: CELL_H, width: currentWidth }}
         className="h-full p-1 transition-all duration-300 ease-in-out"

@@ -16,7 +16,6 @@ import { DropBox, HolderBox, TaskBox } from '../card';
 interface TaskCellProps {
   index: number;
   cell: TaskMetadata;
-  isAbsence: boolean;
   allocation?: Allocation;
   addAllocation: (allocation: Allocation) => void;
   setAllocation: (allocation: Allocation) => void;
@@ -35,7 +34,6 @@ interface TaskCellProps {
 export const TaskCell: React.FC<TaskCellProps> = ({
   index,
   cell,
-  isAbsence,
   allocation,
   addAllocation,
   setAllocation,
@@ -50,7 +48,7 @@ export const TaskCell: React.FC<TaskCellProps> = ({
   onEdit,
   badgeUrl
 }) => {
-  const { isResizing, isDragging, isOver, isTask, isTaskExtension } = getRenderState(
+  const { isResizing, isOver, isTask, showHolder, bgColor } = getRenderState(
     cell,
     over,
     allocation
@@ -108,7 +106,7 @@ export const TaskCell: React.FC<TaskCellProps> = ({
         </div>
       </div>
     );
-  } else if (!isTaskExtension && !isResizing && !isDragging) {
+  } else if (showHolder) {
     children = (
       <div className="relative h-full w-full ">
         <div key="createbox" className="absolute h-full w-full top-0 left-0">
@@ -118,21 +116,9 @@ export const TaskCell: React.FC<TaskCellProps> = ({
     );
   }
 
-  let color = '';
-  switch (true) {
-    case isAbsence:
-      color = 'bg-yellow-600/30';
-      break;
-    case !cell.workingDay:
-      color = 'bg-[rgba(0,0,0,0.3)]';
-      break;
-    default:
-      break;
-  }
-
   return (
     <td
-      className={`border-2 border-slate-500 relative ${color}`}
+      className={`border-2 border-slate-500 relative ${bgColor}`}
       onDragOver={handleDragOver}
       onDragEnter={onDragEnter}
       onDrop={onDragDrop}
@@ -143,11 +129,25 @@ export const TaskCell: React.FC<TaskCellProps> = ({
 };
 
 const getRenderState = (cell: TaskMetadata, over?: Over, allocation?: Allocation) => {
-  const isResizing = cell.resizing;
-  const isDragging = cell.dragging;
   const isOver = over?.memberId === cell.member.id && over.dateLabel === cell.date.label;
   const isTask = !!cell.task && allocation?.id === cell.task;
-  const isTaskExtension = cell.span > 0;
 
-  return { isResizing, isDragging, isOver, isTask, isTaskExtension };
+  const isResizing = cell.resizing;
+  const isDragging = cell.dragging;
+  const isTaskExtension = cell.span > 0;
+  const showHolder = !isTaskExtension && !isResizing && !isDragging;
+
+  let bgColor = '';
+  switch (true) {
+    case cell.isAbsence:
+      bgColor = 'bg-yellow-600/30';
+      break;
+    case !cell.workingDay:
+      bgColor = 'bg-[rgba(0,0,0,0.3)]';
+      break;
+    default:
+      break;
+  }
+
+  return { isOver, isTask, isResizing, isTaskExtension, showHolder, bgColor };
 };

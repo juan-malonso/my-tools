@@ -16,10 +16,10 @@ export const AllocationSettings: React.FC<{
   const memberOptions = members.values.map((m) => ({ value: m.id, label: m.name }));
 
   const taskAllocations = allocations.values.filter((a) => a.taskId === task.id);
-  const totalHours = taskAllocations.reduce((acc, curr) => {
+  const totalDays = taskAllocations.reduce((acc, curr) => {
     const member = members.values.find((m) => m.id === curr.memberId);
     if (!member) return acc;
-    return acc + curr.span * (member.schedule.find((_, i) => i < 5) ?? 0);
+    return acc + curr.span;
   }, 0);
 
   const hasCollision = (current: Allocation) => {
@@ -58,7 +58,7 @@ export const AllocationSettings: React.FC<{
                 variant="secondary"
                 disabled={true}
                 type="text"
-                value={`${totalHours.toString()}h`}
+                value={`${totalDays.toString()} day(s)`}
                 size="sm"
                 className="w-12 text-center"
               />
@@ -85,9 +85,7 @@ export const AllocationSettings: React.FC<{
               const isCurrent = all.id === allocation?.id;
 
               const member = members.values.find((m) => m.id === all.memberId);
-              const memberHours = member
-                ? all.span * (member.schedule.find((_, i) => i < 5) ?? 0)
-                : 0;
+              const memberDays = member ? all.span : 0;
 
               const isCollision = hasCollision(all);
 
@@ -155,7 +153,7 @@ export const AllocationSettings: React.FC<{
                         className="w-1/4"
                         disabled={true}
                         type="text"
-                        value={`${memberHours.toString()}h`}
+                        value={`${memberDays.toString()} day(s)`}
                         size="sm"
                       />
                     </div>

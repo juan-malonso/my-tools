@@ -69,6 +69,7 @@ export const TaskRow: React.FC<TaskRowProps> = ({
         member,
         date,
         workingDay,
+        isAbsence: absences.includes(date.label),
         task: allocation?.id,
         span: currentSpan,
         next: next?.label,
@@ -80,7 +81,7 @@ export const TaskRow: React.FC<TaskRowProps> = ({
 
       return { cell, allocation };
     });
-  }, [dates, memberTasks, member, dragged, resizing]);
+  }, [dates, memberTasks, absences, member, dragged, resizing]);
 
   return (
     <tr
@@ -95,7 +96,6 @@ export const TaskRow: React.FC<TaskRowProps> = ({
           allocation={allocation}
           addAllocation={allocations.add}
           setAllocation={allocations.set}
-          isAbsence={absences.includes(cell.date.label)}
           modules={modules}
           tasks={tasks}
           addTask={addTask(member.id, cell.date)}

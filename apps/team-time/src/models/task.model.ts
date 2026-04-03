@@ -17,6 +17,7 @@ export interface TaskMetadata {
   member: Member;
   date: ItemDate;
   workingDay: boolean;
+  isAbsence: boolean;
   task?: string;
   span: number;
   next?: string;
