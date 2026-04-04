@@ -1,16 +1,16 @@
 {
   "name": "screen-wall",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
-    "build": "NEXT_PRIVATE_STANDALONE=true next build",
-    "deploy": "wrangler deploy",
-    "deploy:build": "yarn build && yarn postbuild && wrangler deploy",
-    "dev": "next dev",
+    "build": "NEXT_PRIVATE_STANDALONE=true next build --webpack",
+    "deploy": "../../deploy.sh -n screen-wall",
+    "deploy:build": "yarn build && yarn postbuild && yarn deploy",
+    "dev": "next dev --webpack",
     "lint": "eslint .",
     "postbuild": "opennextjs-cloudflare build -s",
-    "start": "wrangler dev",
-    "start:build": "yarn build && yarn postbuild && wrangler dev"
+    "start": "wrangler dev --remote",
+    "start:build": "yarn build && yarn postbuild && wrangler dev --remote"
   },
   "dependencies": {
     "@packages/components": "workspace:*",
