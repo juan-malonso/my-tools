@@ -19,7 +19,7 @@ export function Sidebar({ children, instructions }: SidebarProps) {
     );
 
   return (
-    <div className={`w-full h-full ${style} border-r ${border} flex flex-col`}>
+    <div className={`w-full h-[calc(100vh-60px)] ${style} border-r ${border} flex flex-col`}>
       <div className={`${section} h-full overflow-y-auto`}>{children}</div>
       {leyend}
     </div>

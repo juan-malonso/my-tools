@@ -1,10 +1,10 @@
 import React from 'react';
 
-type SelectVariant = 'primary' | 'secondary' | 'ghost';
-type SelectSize = 'xs' | 'sm' | 'md' | 'lg';
+type SelectVariant = 'ghost' | 'primary' | 'secondary';
+type SelectSize = 'lg' | 'md' | 'sm' | 'xs';
 
 export interface SelectOption {
-  value: string | number;
+  value: number | string;
   label: string;
   disabled?: boolean;
 }

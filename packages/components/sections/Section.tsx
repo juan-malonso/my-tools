@@ -10,7 +10,7 @@ export function Section({ title, level = 'h2', actions, children }: SectionProps
 
   return (
     <div>
-      <div className="flex justify-between pb-4">
+      <div className="flex justify-between items-center pb-4">
         <Tag className="text-sm uppercase text-gray-500 font-semibold tracking-wider">{title}</Tag>
         {actions}
       </div>

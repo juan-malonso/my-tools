@@ -1,8 +1,11 @@
+import { type Position } from './position.model';
+
 export interface Monitor {
+  name: string;
   orientation: 'horizontal' | 'vertical';
   aspectRatio: string;
   inches: number;
-  position: { x: number; y: number; w: number; h: number };
+  position: Position;
 }
 
 export interface MonitorUtils {

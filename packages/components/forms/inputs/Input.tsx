@@ -1,7 +1,7 @@
 import React from 'react';
 
-type InputVariant = 'primary' | 'secondary' | 'ghost';
-type InputSize = 'sm' | 'md' | 'lg';
+type InputVariant = 'ghost' | 'primary' | 'secondary';
+type InputSize = 'lg' | 'md' | 'sm';
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   variant?: InputVariant;

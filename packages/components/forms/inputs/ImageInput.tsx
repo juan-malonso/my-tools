@@ -1,14 +1,14 @@
 import React, { useRef, useState } from 'react';
 
-import { UploadIcon } from '../icons';
+import { UploadIcon } from '../../icons';
 
 export interface ImageInputProps {
   onChange: (e: File) => void;
 }
 
 const style =
-  'border-2 border-dashed border-gray-700 rounded-xl hover:border-blue-500 hover:bg-gray-800';
-const onDragStyle = `${style} border-blue-500 bg-gray-800`;
+  'border-2 border-dashed border-gray-700 rounded-xl hover:border-purple-500 hover:bg-gray-800';
+const onDragStyle = `${style} border-purple-500 bg-gray-800`;
 
 export function ImageInput({ onChange }: ImageInputProps) {
   const [onDrag, setOnDrag] = useState(false);
@@ -76,13 +76,13 @@ export function ImageInput({ onChange }: ImageInputProps) {
         onChange={handleFile}
       />
 
-      <div className="text-gray-400 group-hover:text-blue-400 mb-2">
+      <div className="text-gray-400 group-hover:text-purple-400 mb-2">
         <UploadIcon className="w-10 h-10 mx-auto" />
       </div>
 
       <p className="text-sm text-gray-300">
         Drag and drop an image or
-        <span className="text-blue-500 font-medium"> click to browse</span>
+        <span className="text-purple-500 font-medium"> click to browse</span>
       </p>
 
       <p className="text-xs text-gray-500 mt-1">JPG, PNG, WEBP</p>

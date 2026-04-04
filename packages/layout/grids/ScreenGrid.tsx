@@ -50,7 +50,7 @@ export function ScreenGrid({
       </head>
       <Grid>
         <header className={`[grid-area:${headerId}] z-50`}>
-          <Header title={headerTitle} topnav={headerTopnav} actions={headerActions}></Header>
+          <Header title={headerTitle} topnav={headerTopnav} actions={headerActions} />
         </header>
         <aside className={`[grid-area:${sidebarId}] z-50`}>
           <Sidebar instructions={sidebarInstructions}>{sidebarContent}</Sidebar>
@@ -67,7 +67,7 @@ function Grid({ children }: { children: React.ReactNode }) {
   return (
     <body
       className={`
-        h-full w-full overflow-hidden
+        h-100vh w-100vw overflow-hidden
         grid 
         grid-rows-[60px_1fr]
         grid-cols-[350px_1fr]

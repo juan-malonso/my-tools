@@ -1,14 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-
-import { Card } from '@packages/components';
+import { MonitorIcon } from '@packages/components';
 import { ScreenGrid } from '@packages/layout';
 import Script from 'next/script';
 
-import { Body } from '@/components/body';
-import { PageIcon } from '@/components/icons';
-import { Sidebar } from '@/components/sidebar';
+import { Body } from '@/components/body/Body';
+import { SidebarContent } from '@/components/sidebar/SidebarContent';
 import { type Asset, type AssetUtils, type Monitor, type MonitorUtils } from '@/models';
 
 export default function Page() {
@@ -28,7 +26,7 @@ export default function Page() {
     del: assetDel
   };
 
-  const [monitors, setMonitors] = useState<Monitor[]>([defaultMonitor()]);
+  const [monitors, setMonitors] = useState<Monitor[]>([]);
 
   const monitorsAdd = (monitor: Monitor, index?: number) => {
     if (index === undefined) {
@@ -55,54 +53,40 @@ export default function Page() {
   return (
     <ScreenGrid
       headName="Screen Wall"
-      headIcon="/favicon.ico"
+      headIcon="/favicon.svg"
       headStyles={<Script src="https://cdn.tailwindcss.com" />}
       headerTitle={
         <div className="flex items-center gap-2 p-3">
-          <PageIcon />
+          <MonitorIcon className="h-6 w-6 text-purple-500" />
           <h1 className="text-xl font-bold tracking-tight">
-            Screen<span className="text-blue-500"> Wall</span>
+            Screen<span className="text-purple-500"> Wall</span>
           </h1>
         </div>
       }
-      sidebarContent={<Sidebar asset={assetUtils} monitors={monitorUtils} />}
+      sidebarContent={<SidebarContent asset={assetUtils} monitors={monitorUtils} />}
       sidebarInstructions={
-        <Card level="none" actions={<></>}>
-          <p className="text-gray-300 text-sm">Controls:</p>
-          <ul className="list-disc list-inside space-y-1 text-gray-400 text-sm">
-            <li>Drag monitors to move them.</li>
-            <li>Drag the image to pan it around.</li>
-            <li>Scroll on the background to zoom.</li>
-            <li>Drag with scroll to move view.</li>
+        <div className="text-sm text-gray-300 gap-2 flex flex-col">
+          <b>Controls:</b>
+          <ul className="list-disc list-inside space-y-1 text-gray-400">
+            <li>
+              <b>Left Click:</b> Move & resize elements.
+            </li>
+            <li>
+              <b>Middle Click:</b> Pan the canvas.
+            </li>
+            <li>
+              <b>Scroll:</b> Zoom in/out.
+            </li>
+            <li>
+              <b>Export:</b> Click monitor icon to download crop.
+            </li>
           </ul>
-        </Card>
+        </div>
       }
     >
-      <Body asset={assetUtils} monitors={monitorUtils} />
+      <div className="h-full w-full relative">
+        <Body asset={assetUtils} monitors={monitorUtils} />
+      </div>
     </ScreenGrid>
   );
-}
-
-function defaultMonitor(): Monitor {
-  const monitor: Monitor = {
-    orientation: 'horizontal',
-    aspectRatio: '16:9',
-    inches: 27,
-    position: { x: 0, y: 0, w: 0, h: 0 }
-  };
-
-  const [ratioW, ratioH] = monitor.aspectRatio.split(':').map(Number);
-  const { inches } = monitor;
-
-  const inchesH = inches / Math.sqrt(Math.pow(ratioW / ratioH, 2) + 1);
-  const inchesW = inchesH * (ratioW / ratioH);
-
-  const scalingFactor = 20;
-  const pixelW = inchesW * scalingFactor;
-  const pixelH = inchesH * scalingFactor;
-
-  monitor.position.w = monitor.orientation === 'horizontal' ? pixelW : pixelH;
-  monitor.position.h = monitor.orientation === 'horizontal' ? pixelH : pixelW;
-
-  return monitor;
 }
